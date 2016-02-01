@@ -1,0 +1,8 @@
+Package: rNBA
+Title: NBA Data
+Version: 0.0.0.9000
+Authors@R: Luke Lefebure <luke.lefebure@gmail.com> [aut, cre], Vineet Ahluwalia <vineetahluwalia1@gmail.com> [aut, cre]
+Description: rNBA provides easy access to data hosted on stats.nba.com, and it provides tools for exploring the data.
+Depends: R (>= 3.2.3)
+License:
+LazyData: true
