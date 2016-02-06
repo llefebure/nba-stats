@@ -4,7 +4,7 @@
 #' @return A data frame containing info on the player with the specified player_id
 #' @export
 #' @examples
-#' getPlayerData(201939)
+#' getPlayerData(list(playerID=201939))
 getPlayerData <- function(params){
   url <- buildURL("commonplayerinfo", params)
   data <- RJSONIO::fromJSON(url, nullValue=NA)
