@@ -1,4 +1,4 @@
-#' Retrieves a data frame containing info for a player (this is just an example.. trying to learn how packages work).
+#' Retrieves a data frame containing info for a player.
 #'
 #' @param playerID, ID of player you want to retrieve
 #' @return A data frame containing info on the player with the specified player_id
