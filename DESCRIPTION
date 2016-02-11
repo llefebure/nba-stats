@@ -9,4 +9,4 @@ Depends:
 License: 
 LazyData: true
 RoxygenNote: 5.0.1
-Imports: RJSONIO
+Imports: jsonlite

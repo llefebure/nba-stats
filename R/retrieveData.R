@@ -6,11 +6,7 @@
 #' @examples
 #' getPlayerData(list(playerID=201939))
 getPlayerData <- function(params){
-  url <- buildURL("commonplayerinfo", params)
-  data <- RJSONIO::fromJSON(url, nullValue=NA)
-  header <- data$resultSets[[1]]$headers
-  values <- unlist(data$resultSets[[1]]$rowSet)
-  data.frame(Attribute = header, Value = values)
+  getGenericData("commonplayerinfo", params)
 }
 
 #' Retrieves a generic data source
@@ -23,12 +19,10 @@ getPlayerData <- function(params){
 #' getGenericData("commonallplayers", list(IsOnlyCurrentSeason = 0, LeagueID="00", Season="2015-16"))
 getGenericData <- function(resource, params){
   url <- buildURL(resource, params)
-  data <- RJSONIO::fromJSON(url, nullValue=NA)
-  header <- data$resultSets[[1]]$headers
-  values <- lapply(data$resultSets[[1]]$rowSet, unlist)
-  df <- data.frame(t(sapply(values, unlist)))
-  colnames(df) <- header
-  df
+  data <- jsonlite::fromJSON(url)
+  headers <- data$resultSets$headers
+  values <- data$resultSets$rowSet
+  list(headers = headers, values = values)
 }
 
 #' Builds a URL for requesting a resource.
