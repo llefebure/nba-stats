@@ -2,7 +2,7 @@
 % Please edit documentation in R/retrieveData.R
 \name{getGenericData}
 \alias{getGenericData}
-\title{Retrieves a generic data source}
+\title{Retrieve a generic data source}
 \usage{
 getGenericData(endpoint, params = list())
 }
@@ -15,7 +15,8 @@ getGenericData(endpoint, params = list())
 A data frame or a list of data frames containing the requested data.
 }
 \description{
-Retrieves a generic data source
+Use \link{\code{searchEndpoints}} and \link{\code{getEndpointParams}} to learn
+what arguments to pass into this function.
 }
 \examples{
 getGenericData("commonallplayers", list(IsOnlyCurrentSeason = 0, LeagueID="00", Season="2015-16"))
