@@ -9,6 +9,6 @@
 An R package for retrieving stats from the NBA.
 }
 \references{
-All data comes from \url{http://stats.nba.com/}. If you plan to publish anything resulting from the use of this package, the data must be explicity be attributed to the NBA.
+All data comes from \url{http://stats.nba.com/}. If you plan to publish anything resulting from the use of this package, the data must explicity be attributed to the NBA.
 }
 
