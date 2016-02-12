@@ -4,10 +4,10 @@
 \alias{buildURL}
 \title{Builds a URL for requesting a resource.}
 \usage{
-buildURL(resource, params = list())
+buildURL(endpoint, params = list())
 }
 \arguments{
-\item{resource, }{endpoint to retrieve as a character vector}
+\item{endpoint, }{endpoint to retrieve as a character vector}
 
 \item{params, }{list of parameters}
 }

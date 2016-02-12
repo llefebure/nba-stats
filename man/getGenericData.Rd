@@ -4,10 +4,10 @@
 \alias{getGenericData}
 \title{Retrieves a generic data source}
 \usage{
-getGenericData(resource, params = list())
+getGenericData(endpoint, params = list())
 }
 \arguments{
-\item{resource, }{endpoint to retrieve as a character vector}
+\item{endpoint, }{endpoint to retrieve as a character vector}
 
 \item{params, }{list of parameters}
 }
