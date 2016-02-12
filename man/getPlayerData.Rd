@@ -2,20 +2,20 @@
 % Please edit documentation in R/retrieveData.R
 \name{getPlayerData}
 \alias{getPlayerData}
-\title{Retrieves a data frame containing info for a player (this is just an example.. trying to learn how packages work).}
+\title{Retrieves a data frame containing info for a player.}
 \usage{
-getPlayerData(params)
+getPlayerData(playerID)
 }
 \arguments{
 \item{playerID, }{ID of player you want to retrieve}
 }
 \value{
-A data frame containing info on the player with the specified player_id
+A list of data frames containing info on the player with the specified player_id.
 }
 \description{
-Retrieves a data frame containing info for a player (this is just an example.. trying to learn how packages work).
+Retrieves a data frame containing info for a player.
 }
 \examples{
-getPlayerData(list(playerID=201939))
+getPlayerData(playerID = 201939)
 }
 

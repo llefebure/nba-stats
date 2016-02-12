@@ -4,7 +4,7 @@
 \alias{getGenericData}
 \title{Retrieves a generic data source}
 \usage{
-getGenericData(resource, params)
+getGenericData(resource, params = list())
 }
 \arguments{
 \item{resource, }{endpoint to retrieve as a character vector}
@@ -12,7 +12,7 @@ getGenericData(resource, params)
 \item{params, }{list of parameters}
 }
 \value{
-A data frame containing info on the player with the specified player_id
+A data frame or a list of data frames containing the requested data.
 }
 \description{
 Retrieves a generic data source
