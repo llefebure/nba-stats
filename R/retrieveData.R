@@ -13,7 +13,7 @@ getPlayerData <- function(playerID){
 
 #' Retrieve a generic data source
 #'
-#' @description Use \link{\code{searchEndpoints}} and \link{\code{getEndpointParams}} to learn
+#' @description Use \code{\link{searchEndpoints}} and \code{\link{getEndpointParams}} to learn
 #' what arguments to pass into this function.
 #' @param endpoint, endpoint to retrieve as a character vector
 #' @param params, list of parameters
@@ -28,7 +28,7 @@ getGenericData <- function(endpoint, params = list()){
   values <- data$resultSets$rowSet
   res <- list()
   for(i in 1:length(headers)){
-    df <- data.frame(values[[i]])
+    df <- data.frame(values[[i]], stringsAsFactors = FALSE)
     if (length(df) > 0){
       colnames(df) <- headers[[i]]
       res <- c(res, list(df))

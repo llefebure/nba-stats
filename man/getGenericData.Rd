@@ -15,7 +15,7 @@ getGenericData(endpoint, params = list())
 A data frame or a list of data frames containing the requested data.
 }
 \description{
-Use \link{\code{searchEndpoints}} and \link{\code{getEndpointParams}} to learn
+Use \code{\link{searchEndpoints}} and \code{\link{getEndpointParams}} to learn
 what arguments to pass into this function.
 }
 \examples{
