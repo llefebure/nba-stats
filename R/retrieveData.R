@@ -26,14 +26,16 @@ getGenericData <- function(endpoint, params = list()){
   data <- jsonlite::fromJSON(url)
   headers <- data$resultSets$headers
   values <- data$resultSets$rowSet
-  res <- list()
-  for(i in 1:length(headers)){
+  res <- lapply(1:length(headers), function(i){
     df <- data.frame(values[[i]], stringsAsFactors = FALSE)
     if (length(df) > 0){
       colnames(df) <- headers[[i]]
-      res <- c(res, list(df))
+      return(df)
+    } else {
+      return(NA)
     }
-  }
+  })
+  res <- res[!is.na(res)]
   if (length(res) == 1){
     return(res[[1]])
   } else {
