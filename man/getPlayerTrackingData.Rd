@@ -12,7 +12,7 @@ getPlayerTrackingData(year, type = c("catchShootData", "defenseData",
 \item{year, }{the season from which to retrieve data. 2014 refers to the 2014-15 season, 2015 refers to 
 the 2015-16 season, etc. The earliest available year for this data is 2013 (the 2013-14 season).}
 
-\item{type, }{a character vector containing one or more type of data retrive. The valid types are
+\item{type, }{a character vector containing one or more type of data to retrieve. The valid types are
 "catchShootData", "defenseData", "drivesData", "passingData", "touchesData", "pullUpShootData", 
 "reboundingData", "shootingData", or "speedData". The default is all of them.}
 }
