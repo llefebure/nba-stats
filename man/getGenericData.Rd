@@ -12,13 +12,17 @@ getGenericData(endpoint, params = list())
 \item{params, }{list of parameters}
 }
 \value{
-A data frame or a list of data frames containing the requested data.
+A data frame or a list of data frames (if the endpoint returns multiple 
+datasets) containing the requested data.
 }
 \description{
-Use \code{\link{searchEndpoints}} and \code{\link{getEndpointParams}} to learn
-what arguments to pass into this function.
+This function retrieves the specified data source. Use \code{\link{searchEndpoints}}
+to see valid options for the endpoint parameter (these are the available datasets) and 
+\code{\link{getEndpointParams}} to learn what parameters are needed to pass in as the
+params argument for the chosen endpoint.
 }
 \examples{
-getGenericData("commonallplayers", list(IsOnlyCurrentSeason = 0, LeagueID="00", Season="2015-16"))
+getGenericData("commonallplayers", list(IsOnlyCurrentSeason = 0, LeagueID = "00", Season = "2015-16"))
+getGenericData("playergamelog", list(PlayerID = 201939, Season = "2015-16", SeasonType = "Regular+Season"))
 }
 

@@ -3,4 +3,5 @@
 export(getEndpointParams)
 export(getGenericData)
 export(getPlayerData)
+export(getPlayerTrackingData)
 export(searchEndpoints)
