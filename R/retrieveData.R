@@ -152,7 +152,8 @@ getIDMappings <- function() {
     df <- getGenericData("commonallplayers", list(IsOnlyCurrentSeason = 0, LeagueID = "00", Season = mostRecentSeason))
   }
   player <- data.frame(PLAYER_ID = df$PERSON_ID, PLAYER_NAME = df$DISPLAY_FIRST_LAST,
-                       FROM_YEAR = df$FROM_YEAR, TO_YEAR = df$TO_YEAR, stringsAsFactors = FALSE)
+                       FROM_YEAR = df$FROM_YEAR, TO_YEAR = df$TO_YEAR, ROSTERSTATUS = df$ROSTERSTATUS,
+                       stringsAsFactors = FALSE)
   team <- data.frame(unique(df[df$TEAM_ID != 0, c("TEAM_ID", "TEAM_CITY", "TEAM_NAME", "TEAM_ABBREVIATION", "TEAM_CODE")]),
                      stringsAsFactors = FALSE)
   rownames(team) <- NULL
