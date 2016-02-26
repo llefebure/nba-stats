@@ -21,10 +21,9 @@ A data frame or list of data frames (if multiple types specified) containing the
 }
 \description{
 This function retrieves Player Tracking stats (see the "Player Tracking" tab on 
-\link{http://stats.nba.com/}).
+\url{http://stats.nba.com/}.
 }
 \examples{
-getPlayerTrackingData(year = 2014)
-getPlayerTrackingData(year = 2015, "defenseData")
+str(getPlayerTrackingData(year = 2014, c("catchShootData", "defenseData")))
 }
 

@@ -6,7 +6,7 @@ Description: rNBA provides easy access to data hosted on stats.nba.com, and it
     provides tools for exploring the data.
 Depends: 
     R (>= 3.2.3)
-License: 
+License: GPL (>= 2)
 LazyData: true
 RoxygenNote: 5.0.1
 Imports: jsonlite

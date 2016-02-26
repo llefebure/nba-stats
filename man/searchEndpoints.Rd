@@ -2,7 +2,7 @@
 % Please edit documentation in R/retrieveData.R
 \name{searchEndpoints}
 \alias{searchEndpoints}
-\title{Search raw endpoints that can be passed to \code{\link{getGenericData}}.}
+\title{Search for endpoints that can be passed to \code{\link{getGenericData}}}
 \usage{
 searchEndpoints(pattern)
 }

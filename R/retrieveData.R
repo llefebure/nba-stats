@@ -53,8 +53,6 @@ jsonToDF <- function(data) {
 #' @param endpoint, endpoint to retrieve as a character vector
 #' @param params, list of parameters
 #' @return A full URL for retrieving the specified data.
-#' @examples
-#' buildGenericURL("commonplayerinfo", list(playerID = 201939))
 buildGenericURL <- function(endpoint, params = list()){
   base <- "http://stats.nba.com/stats/"
   param.list <- paste(paste(names(params), unlist(params), sep = "="), collapse = "&")
@@ -63,7 +61,7 @@ buildGenericURL <- function(endpoint, params = list()){
   url
 }
 
-#' Search raw endpoints that can be passed to \code{\link{getGenericData}}.
+#' Search for endpoints that can be passed to \code{\link{getGenericData}}
 #'
 #' @description This function lets you search for available endpoints. Use \code{\link{getEndpointParams}}
 #' to get the required parameters for a specified endpoint. Once you have an endpoint and a parameter list,
@@ -79,7 +77,7 @@ searchEndpoints <- function(pattern){
   endpoints$Endpoint[ind]
 }
 
-#' Get raw endpoint parameters to pass to \code{\link{getGenericData}}.
+#' Get endpoint parameters to pass to \code{\link{getGenericData}}
 #'
 #' @description This function returns the expected parameters for a specified endpoint. Use \code{\link{searchEndpoints}}
 #' to search the available endpoints. Once you have an endpoint and a parameter list, a call can be made to 
@@ -98,7 +96,7 @@ getEndpointParams <- function(endpoint){
 #' Retrieve SportVU Player Tracking Data
 #'
 #' @description This function retrieves Player Tracking stats (see the "Player Tracking" tab on 
-#' \link{http://stats.nba.com/}).
+#' \url{http://stats.nba.com/}.
 #' @param year, the season from which to retrieve data. 2014 refers to the 2014-15 season, 2015 refers to 
 #' the 2015-16 season, etc. The earliest available year for this data is 2013 (the 2013-14 season).
 #' @param type, a character vector containing one or more type of data to retrieve. The valid types are
@@ -107,8 +105,7 @@ getEndpointParams <- function(endpoint){
 #' @return A data frame or list of data frames (if multiple types specified) containing the requested data.
 #' @export
 #' @examples
-#' getPlayerTrackingData(year = 2014)
-#' getPlayerTrackingData(year = 2015, "defenseData")
+#' str(getPlayerTrackingData(year = 2014, c("catchShootData", "defenseData")))
 getPlayerTrackingData <- function(year,
                                   type = c("catchShootData", "defenseData", "drivesData", 
                                            "passingData", "touchesData", "pullUpShootData", 
@@ -120,7 +117,7 @@ getPlayerTrackingData <- function(year,
     url <- paste0("http://stats.nba.com/js/data/sportvu/", year, "/", t, ".json")
     data <- jsonlite::fromJSON(url)
     df <- jsonToDF(data)
-    df$SEASON <- paste0(y, "-", (y + 1) %% 2000)
+    df$SEASON <- paste(year, (year + 1) %% 2000, sep = "-")
     df
   })
   names(res) <- type
@@ -129,4 +126,66 @@ getPlayerTrackingData <- function(year,
   } else {
     return(res)
   }
+}
+
+#' Get mappings from player name and team name to PlayerID and TeamID
+#' 
+#' @description For many endpoints, PlayerID or TeamID are required parameters. This function
+#' retrieves a mapping from player name to PlayerID for all players in NBA history and team name 
+#' to TeamID for all current teams. These ID's are used as parameters to pass in to 
+#' \code{\link{getGenericData}} for several endpoints. Use \code{\link{searchIDMappings}} to search
+#' these mappings for a specific player or team.
+#' @return A list of length two containing data frames with the mappings.
+#' @export
+#' @examples 
+#' m <- getIDMappings()
+#' head(m$player)
+#' head(m$team)
+getIDMappings <- function() {
+  # grab the most up to date mappings: if the current year is 2016 for example, check to see
+  # if 2016-17 data has been updated yet, and if not, grab 2015-16 data.
+  currYear <- as.numeric(format(Sys.Date(), "%Y"))
+  mostRecentSeason <- paste(currYear, (currYear + 1) %% 2000, sep = "-")
+  df <- getGenericData("commonallplayers", list(IsOnlyCurrentSeason = 0, LeagueID = "00", Season = mostRecentSeason))
+  if (length(unique(df$TEAM_ID)) == 1) {
+    mostRecentSeason <- paste(currYear - 1, currYear %% 2000, sep = "-")
+    df <- getGenericData("commonallplayers", list(IsOnlyCurrentSeason = 0, LeagueID = "00", Season = mostRecentSeason))
+  }
+  player <- data.frame(PLAYER_ID = df$PERSON_ID, PLAYER_NAME = df$DISPLAY_FIRST_LAST,
+                       FROM_YEAR = df$FROM_YEAR, TO_YEAR = df$TO_YEAR, stringsAsFactors = FALSE)
+  team <- data.frame(unique(df[df$TEAM_ID != 0, c("TEAM_ID", "TEAM_CITY", "TEAM_NAME", "TEAM_ABBREVIATION", "TEAM_CODE")]),
+                     stringsAsFactors = FALSE)
+  rownames(team) <- NULL
+  list(player = player, team = team)
+}
+
+#' Search ID mappings
+#'
+#' @description For many endpoints, PlayerID or TeamID are required parameters. This function
+#' searches the mapping returned by \code{\link{getIDMappings}} for a specified player or team,
+#' and it returns the matches. These ID's are used as parameters to pass in to 
+#' \code{\link{getGenericData}} for several endpoints.
+#' @param mapping, the result of a call to \code{\link{getIDMappings}}.
+#' @param player, player name to search for as a regex pattern (see \link{regex})
+#' @param team, team name to search for as a regex pattern (see \link{regex})
+#' @return Returns a list containing one or two (depending on which of player and team is specified) 
+#' data frame(s) containing matches.
+#' @export
+#' @examples
+#' m <- getIDMappings()
+#' searchIDMappings(m, player = "curry")
+#' searchIDMappings(m, player = "curry", team = "golden state")
+searchIDMappings <- function(mapping, player = NA, team = NA) {
+  if (is.na(player) && is.na(team)) {
+    stop("Must specify either player or team.")
+  }
+  rv <- list()
+  if (!is.na(player)) {
+    rv$player <- mapping$player[grep(player, mapping$player$PLAYER_NAME, ignore.case = TRUE),]
+  }
+  if (!is.na(team)) {
+    rv$team <- mapping$team[grep(team, paste(mapping$team$TEAM_CITY, mapping$team$TEAM_NAME), 
+                                 ignore.case = TRUE),]
+  }
+  rv
 }

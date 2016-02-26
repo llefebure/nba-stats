@@ -2,5 +2,7 @@
 
 export(getEndpointParams)
 export(getGenericData)
+export(getIDMappings)
 export(getPlayerTrackingData)
 export(searchEndpoints)
+export(searchIDMappings)

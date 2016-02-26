@@ -18,7 +18,4 @@ A full URL for retrieving the specified data.
 This function is called by \code{\link{getGenericData}} to build the 
 appropriate URL for retrieving data.
 }
-\examples{
-buildGenericURL("commonplayerinfo", list(playerID = 201939))
-}
 

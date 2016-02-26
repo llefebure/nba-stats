@@ -2,7 +2,7 @@
 % Please edit documentation in R/retrieveData.R
 \name{getEndpointParams}
 \alias{getEndpointParams}
-\title{Get raw endpoint parameters to pass to \code{\link{getGenericData}}.}
+\title{Get endpoint parameters to pass to \code{\link{getGenericData}}}
 \usage{
 getEndpointParams(endpoint)
 }
