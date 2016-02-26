@@ -10,3 +10,7 @@ License:
 LazyData: true
 RoxygenNote: 5.0.1
 Imports: jsonlite
+Suggests: knitr,
+    rmarkdown,
+    testthat
+VignetteBuilder: knitr
