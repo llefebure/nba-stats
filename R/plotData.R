@@ -3,3 +3,6 @@ shotChart <- function(){
   d <- getGenericData("shotchartdetail", params)
   plot(as.numeric(d[[1]]$LOC_X), as.numeric(d[[1]]$LOC_Y))  
 }
+
+
+# This is me Vin
