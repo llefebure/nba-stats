@@ -25,12 +25,11 @@ getGenericData <- function(endpoint, params = list()){
   }, error = function(e) cat("Request failed. Make sure you are connected to the internet!"))
 }
 
-#' Convert JSON response into data frame or list of data frames
-#'
-#' @description Converts the JSON response to a data frame or a list of data frames (if the
-#' JSON has multiple row sets in it).
-#' @param data, JSON resulting from a call to jsonlite::fromJSON
-#' @return A data frame or list of data frames containing the JSON data.
+# Converts the JSON response to a data frame or a list of data frames (if the
+# JSON has multiple row sets in it).
+#
+# @param data, JSON resulting from a call to jsonlite::fromJSON
+# @return A data frame or list of data frames containing the JSON data.
 jsonToDF <- function(data) {
   headers <- data$resultSets$headers
   values <- data$resultSets$rowSet
@@ -51,13 +50,12 @@ jsonToDF <- function(data) {
   }
 }
 
-#' Builds a URL for requesting a generic endpoint
-#'
-#' @description This function is called by \code{\link{getGenericData}} to build the 
-#' appropriate URL for retrieving data. 
-#' @param endpoint, endpoint to retrieve as a character vector
-#' @param params, list of parameters
-#' @return A full URL for retrieving the specified data.
+# This function is called by \code{\link{getGenericData}} to build the 
+# appropriate URL for retrieving data. 
+#
+# @param endpoint, endpoint to retrieve as a character vector
+# @param params, list of parameters
+# @return A full URL for retrieving the specified data.
 buildGenericURL <- function(endpoint, params = list()){
   base <- "http://stats.nba.com/stats/"
   param.list <- paste(paste(names(params), unlist(params), sep = "="), collapse = "&")
