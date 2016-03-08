@@ -4,7 +4,7 @@
 \alias{searchEndpoints}
 \title{Search for endpoints that can be passed to \code{\link{getGenericData}}}
 \usage{
-searchEndpoints(pattern)
+searchEndpoints(pattern = ".")
 }
 \arguments{
 \item{pattern, }{regex pattern to search for (see \link{regex})}
@@ -18,7 +18,7 @@ to get the required parameters for a specified endpoint. Once you have an endpoi
 a call can be made to \code{\link{getGenericData}}.
 }
 \examples{
-searchEndpoints(".")
+searchEndpoints()
 searchEndpoints("player")
 }
 

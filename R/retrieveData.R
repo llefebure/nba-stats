@@ -73,9 +73,9 @@ buildGenericURL <- function(endpoint, params = list()){
 #' @return A character vector containing all available and matching endpoints.
 #' @export
 #' @examples
-#' searchEndpoints(".")
+#' searchEndpoints()
 #' searchEndpoints("player")
-searchEndpoints <- function(pattern){
+searchEndpoints <- function(pattern = "."){
   ind <- grep(pattern, endpoints$Endpoint, ignore.case = TRUE)
   endpoints$Endpoint[ind]
 }
