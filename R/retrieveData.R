@@ -15,9 +15,14 @@
 #' getGenericData("commonallplayers", list(IsOnlyCurrentSeason = 0, LeagueID = "00", Season = "2015-16"))
 #' getGenericData("playergamelog", list(PlayerID = 201939, Season = "2015-16", SeasonType = "Regular+Season"))
 getGenericData <- function(endpoint, params = list()){
-  url <- buildGenericURL(endpoint, params)
-  data <- jsonlite::fromJSON(url)
-  return(jsonToDF(data))
+  if (!(endpoint %in% endpoints$Endpoint)) {
+    stop("Invalid Endpoint")
+  }
+  tryCatch({
+    url <- buildGenericURL(endpoint, params)
+    data <- jsonlite::fromJSON(url)
+    return(jsonToDF(data))
+  }, error = function(e) cat("Request failed. Make sure you are connected to the internet!"))
 }
 
 #' Convert JSON response into data frame or list of data frames
@@ -106,26 +111,34 @@ getEndpointParams <- function(endpoint){
 #' @export
 #' @examples
 #' str(getPlayerTrackingData(year = 2014, c("catchShootData", "defenseData")))
-getPlayerTrackingData <- function(year,
-                                  type = c("catchShootData", "defenseData", "drivesData", 
-                                           "passingData", "touchesData", "pullUpShootData", 
-                                           "reboundingData", "shootingData", "speedData")){
+getPlayerTrackingData <- function(year, type = NULL){
+  all.types <- c("catchShootData", "defenseData", "drivesData", 
+                 "passingData", "touchesData", "pullUpShootData", 
+                 "reboundingData", "shootingData", "speedData")
   if (year < 2013) {
     stop("Data is only available from 2013 onwards.")
   }
-  res <- lapply(type, function(t) {
-    url <- paste0("http://stats.nba.com/js/data/sportvu/", year, "/", t, ".json")
-    data <- jsonlite::fromJSON(url)
-    df <- jsonToDF(data)
-    df$SEASON <- paste(year, (year + 1) %% 2000, sep = "-")
-    df
-  })
-  names(res) <- type
-  if (length(res) == 1) {
-    return(res[[1]])
-  } else {
-    return(res)
+  if (is.null(type)) {
+    type <- all.types
   }
+  if (!all(sapply(type, function(t) t %in% all.types))) {
+    stop("Invalid type specified.")
+  }
+  tryCatch({
+    res <- lapply(type, function(t) {
+      url <- paste0("http://stats.nba.com/js/data/sportvu/", year, "/", t, ".json")
+      data <- jsonlite::fromJSON(url)
+      df <- jsonToDF(data)
+      df$SEASON <- paste(year, (year + 1) %% 2000, sep = "-")
+      df
+    })
+    names(res) <- type
+    if (length(res) == 1) {
+      return(res[[1]])
+    } else {
+      return(res)
+    }
+  }, error = function(e) cat("One or more requests failed. Make sure you are connected to the internet!"))
 }
 
 #' Get mappings from player name and team name to PlayerID and TeamID

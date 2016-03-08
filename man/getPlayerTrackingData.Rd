@@ -4,9 +4,7 @@
 \alias{getPlayerTrackingData}
 \title{Retrieve SportVU Player Tracking Data}
 \usage{
-getPlayerTrackingData(year, type = c("catchShootData", "defenseData",
-  "drivesData", "passingData", "touchesData", "pullUpShootData",
-  "reboundingData", "shootingData", "speedData"))
+getPlayerTrackingData(year, type = NULL)
 }
 \arguments{
 \item{year, }{the season from which to retrieve data. 2014 refers to the 2014-15 season, 2015 refers to 
