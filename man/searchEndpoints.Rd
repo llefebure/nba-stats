@@ -18,7 +18,7 @@ to get the required parameters for a specified endpoint. Once you have an endpoi
 a call can be made to \code{\link{getGenericData}}.
 }
 \examples{
-searchEndpoints()
-searchEndpoints("player")
+head(searchEndpoints())
+head(searchEndpoints("player"))
 }
 

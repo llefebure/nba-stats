@@ -17,8 +17,6 @@ to TeamID for all current teams. These ID's are used as parameters to pass in to
 these mappings for a specific player or team.
 }
 \examples{
-m <- getIDMappings()
-head(m$player)
-head(m$team)
+str(getIDMappings())
 }
 

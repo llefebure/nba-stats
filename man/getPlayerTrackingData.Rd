@@ -22,6 +22,6 @@ This function retrieves Player Tracking stats (see the "Player Tracking" tab on
 \url{http://stats.nba.com/}.
 }
 \examples{
-str(getPlayerTrackingData(year = 2014, c("catchShootData", "defenseData")))
+str(getPlayerTrackingData(year = 2014, c("defenseData", "catchshootdata")))
 }
 

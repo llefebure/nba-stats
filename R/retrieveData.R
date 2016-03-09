@@ -12,8 +12,13 @@
 #' datasets) containing the requested data.
 #' @export
 #' @examples
-#' getGenericData("commonallplayers", list(IsOnlyCurrentSeason = 0, LeagueID = "00", Season = "2015-16"))
-#' getGenericData("playergamelog", list(PlayerID = 201939, Season = "2015-16", SeasonType = "Regular+Season"))
+#' player.info.endpoint <- "commonplayerinfo"
+#' player.info.params <- list(IsOnlyCurrentSeason = 0, LeagueID = "00", Season = "2015-16")
+#' str(getGenericData(player.info.endpoint, player.info.params))
+#' ######
+#' game.log.endpoint <- "playergamelog"
+#' game.log.params <- list(PlayerID = 201939, Season = "2015-16", SeasonType = "Regular+Season")
+#' str(getGenericData(game.log.endpoint, game.log.params))
 getGenericData <- function(endpoint, params = list()){
   if (!(endpoint %in% endpoints$Endpoint)) {
     stop("Invalid Endpoint")
@@ -74,8 +79,8 @@ buildGenericURL <- function(endpoint, params = list()){
 #' @return A character vector containing all available and matching endpoints.
 #' @export
 #' @examples
-#' searchEndpoints()
-#' searchEndpoints("player")
+#' head(searchEndpoints())
+#' head(searchEndpoints("player"))
 searchEndpoints <- function(pattern = "."){
   ind <- grep(pattern, endpoints$Endpoint, ignore.case = TRUE)
   endpoints$Endpoint[ind]
@@ -109,7 +114,7 @@ getEndpointParams <- function(endpoint){
 #' @return A data frame or list of data frames (if multiple types specified) containing the requested data.
 #' @export
 #' @examples
-#' str(getPlayerTrackingData(year = 2014, c("catchShootData", "defenseData")))
+#' str(getPlayerTrackingData(year = 2014, c("defenseData", "catchshootdata")))
 getPlayerTrackingData <- function(year, type = NULL){
   all.types <- c("catchShootData", "defenseData", "drivesData", 
                  "passingData", "touchesData", "pullUpShootData", 
@@ -150,9 +155,7 @@ getPlayerTrackingData <- function(year, type = NULL){
 #' @return A list of length two containing data frames with the mappings.
 #' @export
 #' @examples 
-#' m <- getIDMappings()
-#' head(m$player)
-#' head(m$team)
+#' str(getIDMappings())
 getIDMappings <- function() {
   # grab the most up to date mappings: if the current year is 2016 for example, check to see
   # if 2016-17 data has been updated yet, and if not, grab 2015-16 data.

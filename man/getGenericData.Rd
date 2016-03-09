@@ -22,7 +22,12 @@ to see valid options for the endpoint parameter (these are the available dataset
 params argument for the chosen endpoint.
 }
 \examples{
-getGenericData("commonallplayers", list(IsOnlyCurrentSeason = 0, LeagueID = "00", Season = "2015-16"))
-getGenericData("playergamelog", list(PlayerID = 201939, Season = "2015-16", SeasonType = "Regular+Season"))
+player.info.endpoint <- "commonplayerinfo"
+player.info.params <- list(IsOnlyCurrentSeason = 0, LeagueID = "00", Season = "2015-16")
+str(getGenericData(player.info.endpoint, player.info.params))
+######
+game.log.endpoint <- "playergamelog"
+game.log.params <- list(PlayerID = 201939, Season = "2015-16", SeasonType = "Regular+Season")
+str(getGenericData(game.log.endpoint, game.log.params))
 }
 
