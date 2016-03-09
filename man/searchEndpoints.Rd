@@ -18,7 +18,10 @@ to get the required parameters for a specified endpoint. Once you have an endpoi
 a call can be made to \code{\link{getGenericData}}.
 }
 \examples{
-head(searchEndpoints())
-head(searchEndpoints("player"))
+all.endpoints <- searchEndpoints()
+head(all.endpoints)
+######
+player.endpoints <- searchEndpoints("player")
+head(player.endpoints)
 }
 

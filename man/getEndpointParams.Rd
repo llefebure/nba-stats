@@ -18,6 +18,6 @@ to search the available endpoints. Once you have an endpoint and a parameter lis
 \code{\link{getGenericData}}.
 }
 \examples{
-getEndpointParams("commonplayerinfo")
+params <- getEndpointParams("commonplayerinfo")
 }
 

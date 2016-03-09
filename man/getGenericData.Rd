@@ -23,11 +23,13 @@ params argument for the chosen endpoint.
 }
 \examples{
 player.info.endpoint <- "commonplayerinfo"
-player.info.params <- list(IsOnlyCurrentSeason = 0, LeagueID = "00", Season = "2015-16")
-str(getGenericData(player.info.endpoint, player.info.params))
+player.info.params <- list(PlayerID = 201939, IsOnlyCurrentSeason = 0, LeagueID = "00", Season = "2015-16")
+player.info <- getGenericData(player.info.endpoint, player.info.params)
+str(player.info)
 ######
 game.log.endpoint <- "playergamelog"
 game.log.params <- list(PlayerID = 201939, Season = "2015-16", SeasonType = "Regular+Season")
-str(getGenericData(game.log.endpoint, game.log.params))
+game.log <- getGenericData(game.log.endpoint, game.log.params)
+str(game.log)
 }
 

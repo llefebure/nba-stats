@@ -13,12 +13,14 @@
 #' @export
 #' @examples
 #' player.info.endpoint <- "commonplayerinfo"
-#' player.info.params <- list(IsOnlyCurrentSeason = 0, LeagueID = "00", Season = "2015-16")
-#' str(getGenericData(player.info.endpoint, player.info.params))
+#' player.info.params <- list(PlayerID = 201939, IsOnlyCurrentSeason = 0, LeagueID = "00", Season = "2015-16")
+#' player.info <- getGenericData(player.info.endpoint, player.info.params)
+#' str(player.info)
 #' ######
 #' game.log.endpoint <- "playergamelog"
 #' game.log.params <- list(PlayerID = 201939, Season = "2015-16", SeasonType = "Regular+Season")
-#' str(getGenericData(game.log.endpoint, game.log.params))
+#' game.log <- getGenericData(game.log.endpoint, game.log.params)
+#' str(game.log)
 getGenericData <- function(endpoint, params = list()){
   if (!(endpoint %in% endpoints$Endpoint)) {
     stop("Invalid Endpoint")
@@ -79,8 +81,11 @@ buildGenericURL <- function(endpoint, params = list()){
 #' @return A character vector containing all available and matching endpoints.
 #' @export
 #' @examples
-#' head(searchEndpoints())
-#' head(searchEndpoints("player"))
+#' all.endpoints <- searchEndpoints()
+#' head(all.endpoints)
+#' ######
+#' player.endpoints <- searchEndpoints("player")
+#' head(player.endpoints)
 searchEndpoints <- function(pattern = "."){
   ind <- grep(pattern, endpoints$Endpoint, ignore.case = TRUE)
   endpoints$Endpoint[ind]
@@ -95,7 +100,7 @@ searchEndpoints <- function(pattern = "."){
 #' @return A character vector describing the required parameters.
 #' @export
 #' @examples
-#' getEndpointParams("commonplayerinfo")
+#' params <- getEndpointParams("commonplayerinfo")
 getEndpointParams <- function(endpoint){
   if (length(endpoint) != 1) stop("Must pass in only one endpoint")
   if (!(endpoint %in% endpoints$Endpoint)) stop("Endpoint doesn't exist")
@@ -114,7 +119,8 @@ getEndpointParams <- function(endpoint){
 #' @return A data frame or list of data frames (if multiple types specified) containing the requested data.
 #' @export
 #' @examples
-#' str(getPlayerTrackingData(year = 2014, c("defenseData", "catchshootdata")))
+#' pt.data <- getPlayerTrackingData(year = 2014, c("defenseData", "catchshootdata"))
+#' str(pt.data)
 getPlayerTrackingData <- function(year, type = NULL){
   all.types <- c("catchShootData", "defenseData", "drivesData", 
                  "passingData", "touchesData", "pullUpShootData", 
@@ -155,7 +161,8 @@ getPlayerTrackingData <- function(year, type = NULL){
 #' @return A list of length two containing data frames with the mappings.
 #' @export
 #' @examples 
-#' str(getIDMappings())
+#' m <- getIDMappings()
+#' str(m)
 getIDMappings <- function() {
   # grab the most up to date mappings: if the current year is 2016 for example, check to see
   # if 2016-17 data has been updated yet, and if not, grab 2015-16 data.
