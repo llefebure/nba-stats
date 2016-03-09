@@ -58,8 +58,8 @@ jsonToDF <- function(data) {
   }
 }
 
-# This function is called by \code{\link{getGenericData}} to build the 
-# appropriate URL for retrieving data. 
+# This function is called by getGenericData to build the appropriate 
+# URL for retrieving data. 
 #
 # @param endpoint, endpoint to retrieve as a character vector
 # @param params, list of parameters
