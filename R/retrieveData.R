@@ -22,7 +22,8 @@ getGenericData <- function(endpoint, params = list()){
     url <- buildGenericURL(endpoint, params)
     data <- jsonlite::fromJSON(url)
     return(jsonToDF(data))
-  }, error = function(e) cat("Request failed. Make sure you are connected to the internet!"))
+  }, error = function(e) cat("Request failed. Make sure you passed in the parameters 
+                             correctly and that you are connected to the internet!"))
 }
 
 # Converts the JSON response to a data frame or a list of data frames (if the
