@@ -1,7 +1,26 @@
-# need a function to draw the lines on the court
-# Dimensions of court here: http://www.sportsknowhow.com/basketball/dimensions/nba-basketball-court-dimensions.html
-courtOutline <- function(){
-  precision <- .1 # this controls distance between points when plotting arcs
+# Author: Luke Lefebure
+
+#' Get the coordinates of lines on the court
+#' 
+#' @description This function gets the coordinates of the lines on the court (sideline, 
+#' baseline, three point line, etc.) for building custom shot charts. They are expressed
+#' in the same coordinates as those returned by the "shotchartdetail" endpoint.
+#' @return A data frame containing coordinates of line segments that, when connected,
+#' draw the lines of a an NBA court. The type column specifies which segment the point
+#' belongs to, and the ltype column specifies whether that line segment should be solid
+#' or dashed.
+#' @references See \url{http://www.sportsknowhow.com/basketball/dimensions/nba-basketball-court-dimensions.html}
+#' for more information about how an NBA court is laid out.
+#' @export
+#' @examples
+#' court <- courtOutline()
+#' plot(x = NULL, xlim = c(-300, 300), ylim = c(-90, 450), xaxt = "n", yaxt = "n", ann = FALSE)
+#' for (nm in unique(court$type)) {
+#'    s <- court$type == nm
+#'    points(x = court$x[s], y = court$y[s], type = "l", lty = court$ltype[s])
+#' }
+courtOutline <- function() {
+  precision <- .05 # this controls distance between points when plotting arcs
   
   # court dimensions
   court.width <- 50
@@ -98,10 +117,10 @@ shotChart <- function(){
   params <- list(SeasonType="Regular+Season", TeamID=0, PlayerID=201939, GameID="", Outcome="", Location="", Month=0, SeasonSegment="", DateFrom="", DateTo="", OpponentTeamID=0, VsConference="", VsDivision="", Position="", RookieYear="", GameSegment="", Period=0, LastNGames=10, ContextMeasure="FGA", Season="2015-16")
   d <- getGenericData("shotchartdetail", params)
   court <- courtOutline()
-#   p <- ggplot() + 
-#     geom_path(data = court, aes(x = x, y = y, group = type, linetype = ltype)) +
-#     scale_linetype_manual(values = c(2, 1), guide = FALSE) +
-#     geom_point(data = d[[1]], aes(x = as.numeric(d[[1]]$LOC_X), y = as.numeric(d[[1]]$LOC_Y), color = SHOT_MADE_FLAG))
+  p <- ggplot() + 
+    geom_path(data = court, aes(x = x, y = y, group = type, linetype = ltype)) +
+    scale_linetype_manual(values = c(2, 1), guide = FALSE) +
+    geom_point(data = d[[1]], aes(x = as.numeric(d[[1]]$LOC_X), y = as.numeric(d[[1]]$LOC_Y), color = SHOT_MADE_FLAG))
 }
 
 
