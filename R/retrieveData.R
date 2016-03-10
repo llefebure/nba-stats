@@ -29,8 +29,12 @@ getGenericData <- function(endpoint, params = list()){
     url <- buildGenericURL(endpoint, params)
     data <- jsonlite::fromJSON(url)
     return(jsonToDF(data))
-  }, error = function(e) cat(paste("Request failed. Make sure you passed in the parameters",
-                                   "correctly and that you are connected to the internet!")))
+  }, error = function(e) {
+    cat(paste("Request failed. Make sure you passed in the parameters",
+              "correctly (if applicable) and that you are connected to the internet!"))
+    closeAllConnections()
+    }
+  )
 }
 
 # Converts the JSON response to a data frame or a list of data frames (if the
@@ -148,7 +152,11 @@ getPlayerTrackingData <- function(year, type = NULL){
     } else {
       return(res)
     }
-  }, error = function(e) cat("One or more requests failed. Make sure you are connected to the internet!"))
+  }, error = function(e) {
+    cat("One or more requests failed. Make sure you are connected to the internet!")
+    closeAllConnections()
+    }
+  )
 }
 
 #' Get mappings from player name and team name to PlayerID and TeamID

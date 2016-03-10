@@ -11,3 +11,10 @@ test_that("court outline plot", {
   p <- courtOutlinePlot()
   expect_true("ggplot" %in% class(p))
 })
+
+test_that("shot chart", {
+  p1 <- shotChart()
+  p2 <- shotChart(d = stephCurryShots) # equivalent plot as above
+  expect_true("ggplot" %in% class(p1))
+  expect_true("ggplot" %in% class(p2))
+})
