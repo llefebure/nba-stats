@@ -15,7 +15,7 @@
 #' @export
 #' @examples
 #' court <- courtOutline()
-#' plot(x = NULL, xlim = c(-275, 275), ylim = c(-80, 430), xaxt = "n", yaxt = "n", ann = FALSE)
+#' plot(x = NULL, xlim = c(-275, 275), ylim = c(-80, 450), xaxt = "n", yaxt = "n", ann = FALSE)
 #' for (nm in unique(court$type)) {
 #'    s <- court$type == nm
 #'    points(x = court$x[s], y = court$y[s], type = "l", lty = court$ltype[s])
@@ -39,9 +39,8 @@ courtOutline <- function() {
   restricted.radius <- 4
   
   # sideline and baseline
-  length.mult <- .8
   side.base <- data.frame(x = c(rep(-court.width/2, 2), rep(court.width/2, 2)),
-                          y = c(length.mult*court.length/2, 0, 0, length.mult*court.length/2),
+                          y = c(court.length/2, 0, 0, court.length/2),
                           type = "Sideline / Baseline",
                           ltype = "solid")
   
