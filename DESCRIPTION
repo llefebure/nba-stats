@@ -9,7 +9,8 @@ Depends:
 License: GPL (>= 2)
 LazyData: true
 RoxygenNote: 5.0.1
-Imports: jsonlite
+Imports: jsonlite,
+    ggplot2
 Suggests: knitr,
     rmarkdown,
     testthat

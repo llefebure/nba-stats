@@ -14,6 +14,7 @@
 #' for more information about how an NBA court is laid out.
 #' @export
 #' @examples
+#' ## plot court using base graphics
 #' court <- courtOutline()
 #' plot(x = NULL, xlim = c(-275, 275), ylim = c(-80, 450), xaxt = "n", yaxt = "n", ann = FALSE)
 #' for (nm in unique(court$type)) {
@@ -113,15 +114,61 @@ courtOutline <- function() {
   court.lines
 }
 
-shotChart <- function(){
-  params <- list(SeasonType="Regular+Season", TeamID=0, PlayerID=201939, GameID="", Outcome="", Location="", Month=0, SeasonSegment="", DateFrom="", DateTo="", OpponentTeamID=0, VsConference="", VsDivision="", Position="", RookieYear="", GameSegment="", Period=0, LastNGames=10, ContextMeasure="FGA", Season="2015-16")
-  d <- getGenericData("shotchartdetail", params)
+#' Plot the outline of the court
+#'
+#' @description This functions creates a ggplot object with the outline of an
+#' NBA court for building custom shot charts.
+#' @return A ggplot object with the outline of an NBA court.
+#' @export
+#' @examples
+#' courtOutlinePlot()
+courtOutlinePlot <- function() {
   court <- courtOutline()
   p <- ggplot() + 
     geom_path(data = court, aes(x = x, y = y, group = type, linetype = ltype)) +
-    scale_linetype_manual(values = c(2, 1), guide = FALSE) +
-    geom_point(data = d[[1]], aes(x = as.numeric(d[[1]]$LOC_X), y = as.numeric(d[[1]]$LOC_Y), color = SHOT_MADE_FLAG))
+    scale_linetype_manual(values = c(2, 1), guide = FALSE) + 
+    theme(axis.title = element_blank(), axis.ticks = element_blank(),
+          axis.text = element_blank(), panel.background = element_rect(fill = "white", colour = "white"))
+  p
 }
 
-
-# This is me Vin
+#' Build a shot chart for a player
+#' 
+#' @description This function builds a shot chart from either the specified data frame
+#' or the specified parameters.
+#' @param d, a data frame resulting from a call to getGenericData("shotchartdetail", ...)
+#' @param params, a list of parameters for a call to "shotchartdetail" (see
+#' getEndpointParams("shotchartdetail") for valid options). Not all need to be
+#' specified as defaults will be used for unspecified parameters.
+#' @param color, the attribute on which to color the data points in the shot chart
+#' passed as a character vector
+#' @return A ggplot object.
+#' @import ggplot2
+#' @export
+#' @examples
+#' shotChart()
+#' shotChart(params = list(PlayerID = 101106))
+shotChart <- function(d = NULL, params = NULL, color = "EVENT_TYPE"){
+  if (missing(d) && missing(params)) {
+    d <- stephCurryShots
+  } else if (missing(d)){
+    # default options
+    default.params <- list(SeasonType = "Regular+Season", TeamID = 0, PlayerID = 201939, 
+                           GameID = "", Outcome = "", Location = "", Month = 0, 
+                           SeasonSegment = "", DateFrom = "", DateTo = "", 
+                           OpponentTeamID = 0, VsConference = "", VsDivision = "", 
+                           Position = "", RookieYear = "", GameSegment = "", Period=0, 
+                           LastNGames = 10, ContextMeasure = "FGA", Season = "2015-16")
+    for (nm in names(params)) {
+      default.params[[nm]] <- params[[nm]]
+    }
+    d <- getGenericData("shotchartdetail", default.params)[[1]]
+    if (is.null(d)) {
+      return(NULL)
+    }
+  }
+  p <- courtOutlinePlot() +
+    geom_point(data = d, aes_string(x = "as.numeric(LOC_X)", y = "as.numeric(LOC_Y)", color = color)) +
+    labs(color = NULL, title = d$PLAYER_NAME[1])
+  p
+}
