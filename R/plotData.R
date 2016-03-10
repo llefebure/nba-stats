@@ -125,7 +125,7 @@ courtOutline <- function() {
 courtOutlinePlot <- function() {
   court <- courtOutline()
   p <- ggplot() + 
-    geom_path(data = court, aes(x = x, y = y, group = type, linetype = ltype)) +
+    geom_path(data = court, aes_string(x = "x", y = "y", group = "type", linetype = "ltype")) +
     scale_linetype_manual(values = c(2, 1), guide = FALSE) + 
     theme(axis.title = element_blank(), axis.ticks = element_blank(),
           axis.text = element_blank(), panel.background = element_rect(fill = "white", colour = "white"))

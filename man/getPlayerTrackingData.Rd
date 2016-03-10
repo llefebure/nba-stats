@@ -22,7 +22,7 @@ This function retrieves Player Tracking stats (see the "Player Tracking" tab on
 \url{http://stats.nba.com/}.
 }
 \examples{
-pt.data <- getPlayerTrackingData(year = 2014, c("defenseData", "catchshootdata"))
+pt.data <- getPlayerTrackingData(year = 2014, c("defenseData", "catchShootData"))
 str(pt.data)
 }
 

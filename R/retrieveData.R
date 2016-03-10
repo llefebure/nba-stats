@@ -119,7 +119,7 @@ getEndpointParams <- function(endpoint){
 #' @return A data frame or list of data frames (if multiple types specified) containing the requested data.
 #' @export
 #' @examples
-#' pt.data <- getPlayerTrackingData(year = 2014, c("defenseData", "catchshootdata"))
+#' pt.data <- getPlayerTrackingData(year = 2014, c("defenseData", "catchShootData"))
 #' str(pt.data)
 getPlayerTrackingData <- function(year, type = NULL){
   all.types <- c("catchShootData", "defenseData", "drivesData", 
