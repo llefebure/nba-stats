@@ -8,9 +8,10 @@ courtOutline()
 }
 \value{
 A data frame containing coordinates of line segments that, when connected,
-draw the lines of a an NBA court. The type column specifies which segment the point
+draw the lines of an NBA court. The type column specifies which segment the point
 belongs to, and the ltype column specifies whether that line segment should be solid
-or dashed.
+or dashed. The coordinates are in units of feet times 10 with the origin at the
+center of the hoop, the same as that returned by the "shotchartdetail" endpoint.
 }
 \description{
 This function gets the coordinates of the lines on the court (sideline, 
@@ -19,7 +20,7 @@ in the same coordinates as those returned by the "shotchartdetail" endpoint.
 }
 \examples{
 court <- courtOutline()
-plot(x = NULL, xlim = c(-300, 300), ylim = c(-90, 450), xaxt = "n", yaxt = "n", ann = FALSE)
+plot(x = NULL, xlim = c(-275, 275), ylim = c(-80, 430), xaxt = "n", yaxt = "n", ann = FALSE)
 for (nm in unique(court$type)) {
    s <- court$type == nm
    points(x = court$x[s], y = court$y[s], type = "l", lty = court$ltype[s])
