@@ -1,5 +1,9 @@
 # Author: Luke Lefebure
 
+if(getRversion() >= "2.15.1")  {
+  utils::globalVariables(c("stephCurryShots"))
+}
+
 #' Get the coordinates of lines on the court
 #' 
 #' @description This function gets the coordinates of the lines on the court (sideline, 
