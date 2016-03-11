@@ -212,7 +212,7 @@ memGetIDMappings <- memoise::memoise(getIDMappings)
 #' searchIDMappings(player = "curry")
 #' searchIDMappings(player = "curry", team = "golden state")
 searchIDMappings <- function(player = NA, team = NA) {
-  m <- memGetIDMappings()
+  mapping <- memGetIDMappings()
   if (missing(player) && missing(team)) {
     stop("Must specify either player or team.")
   }
