@@ -37,9 +37,6 @@ getGenericData <- function(endpoint, params = list()){
   )
 }
 
-# Memoised version of getGenericData mainly for use with the Shiny app
-memGetGenericData <- memoise::memoise(getGenericData)
-
 # Converts the JSON response to a data frame or a list of data frames (if the
 # JSON has multiple row sets in it).
 #
@@ -194,9 +191,6 @@ getIDMappings <- function() {
   list(player = player, team = team)
 }
 
-# Memoised version of getIDMappings
-memGetIDMappings <- memoise::memoise(getIDMappings)
-
 #' Search ID mappings
 #'
 #' @description For many endpoints, PlayerID or TeamID are required parameters. This function
@@ -230,3 +224,10 @@ searchIDMappings <- function(player = NA, team = NA, active = TRUE) {
   }
   rv
 }
+
+# Memoised version of retrieval functions for internal use
+# Need to use importFrom rather than memoise::memoise because otherwise NOTE
+# is generated.
+#' @importFrom memoise memoise
+memGetGenericData <- memoise(getGenericData)
+memGetIDMappings <- memoise(getIDMappings)
