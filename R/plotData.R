@@ -166,7 +166,7 @@ shotChart <- function(d = NULL, params = NULL, color = "EVENT_TYPE"){
     for (nm in names(params)) {
       default.params[[nm]] <- params[[nm]]
     }
-    d <- getGenericData("shotchartdetail", default.params)[[1]]
+    d <- memGetGenericData("shotchartdetail", default.params)[[1]]
     if (is.null(d)) {
       return(NULL)
     }

@@ -4,11 +4,9 @@
 \alias{searchIDMappings}
 \title{Search ID mappings}
 \usage{
-searchIDMappings(mapping, player = NA, team = NA)
+searchIDMappings(player = NA, team = NA)
 }
 \arguments{
-\item{mapping, }{the result of a call to \code{\link{getIDMappings}}.}
-
 \item{player, }{player name to search for as a regex pattern (see \link{regex})}
 
 \item{team, }{team name to search for as a regex pattern (see \link{regex})}
@@ -24,8 +22,7 @@ and it returns the matches. These ID's are used as parameters to pass in to
 \code{\link{getGenericData}} for several endpoints.
 }
 \examples{
-m <- getIDMappings()
-searchIDMappings(m, player = "curry")
-searchIDMappings(m, player = "curry", team = "golden state")
+searchIDMappings(player = "curry")
+searchIDMappings(player = "curry", team = "golden state")
 }
 

@@ -10,7 +10,8 @@ License: GPL (>= 2)
 LazyData: true
 RoxygenNote: 5.0.1
 Imports: jsonlite,
-    ggplot2
+    ggplot2,
+    memoise
 Suggests: knitr,
     rmarkdown,
     testthat

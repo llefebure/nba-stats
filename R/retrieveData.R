@@ -37,6 +37,9 @@ getGenericData <- function(endpoint, params = list()){
   )
 }
 
+# Memoised version of getGenericData mainly for use with the Shiny app
+memGetGenericData <- memoise::memoise(getGenericData)
+
 # Converts the JSON response to a data frame or a list of data frames (if the
 # JSON has multiple row sets in it).
 #
@@ -164,8 +167,9 @@ getPlayerTrackingData <- function(year, type = NULL){
 #' @description For many endpoints, PlayerID or TeamID are required parameters. This function
 #' retrieves a mapping from player name to PlayerID for all players in NBA history and team name 
 #' to TeamID for all current teams. These ID's are used as parameters to pass in to 
-#' \code{\link{getGenericData}} for several endpoints. Use \code{\link{searchIDMappings}} to search
-#' these mappings for a specific player or team.
+#' \code{\link{getGenericData}} for several endpoints. If you only need to search for a few specific
+#' players or teams, use \code{\link{searchIDMappings}} instead as that function is just a convenient
+#' way to search this mapping.
 #' @return A list of length two containing data frames with the mappings.
 #' @export
 #' @examples 
@@ -190,24 +194,26 @@ getIDMappings <- function() {
   list(player = player, team = team)
 }
 
+# Memoised version of getIDMappings
+memGetIDMappings <- memoise::memoise(getIDMappings)
+
 #' Search ID mappings
 #'
 #' @description For many endpoints, PlayerID or TeamID are required parameters. This function
 #' searches the mapping returned by \code{\link{getIDMappings}} for a specified player or team,
 #' and it returns the matches. These ID's are used as parameters to pass in to 
 #' \code{\link{getGenericData}} for several endpoints.
-#' @param mapping, the result of a call to \code{\link{getIDMappings}}.
 #' @param player, player name to search for as a regex pattern (see \link{regex})
 #' @param team, team name to search for as a regex pattern (see \link{regex})
 #' @return Returns a list containing one or two (depending on which of player and team is specified) 
 #' data frame(s) containing matches.
 #' @export
 #' @examples
-#' m <- getIDMappings()
-#' searchIDMappings(m, player = "curry")
-#' searchIDMappings(m, player = "curry", team = "golden state")
-searchIDMappings <- function(mapping, player = NA, team = NA) {
-  if (is.na(player) && is.na(team)) {
+#' searchIDMappings(player = "curry")
+#' searchIDMappings(player = "curry", team = "golden state")
+searchIDMappings <- function(player = NA, team = NA) {
+  m <- memGetIDMappings()
+  if (missing(player) && missing(team)) {
     stop("Must specify either player or team.")
   }
   rv <- list()

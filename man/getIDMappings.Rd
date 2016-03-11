@@ -13,8 +13,9 @@ A list of length two containing data frames with the mappings.
 For many endpoints, PlayerID or TeamID are required parameters. This function
 retrieves a mapping from player name to PlayerID for all players in NBA history and team name 
 to TeamID for all current teams. These ID's are used as parameters to pass in to 
-\code{\link{getGenericData}} for several endpoints. Use \code{\link{searchIDMappings}} to search
-these mappings for a specific player or team.
+\code{\link{getGenericData}} for several endpoints. If you only need to search for a few specific
+players or teams, use \code{\link{searchIDMappings}} instead as that function is just a convenient
+way to search this mapping.
 }
 \examples{
 m <- getIDMappings()
