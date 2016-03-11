@@ -146,7 +146,8 @@ courtOutlinePlot <- function() {
 #' specified as defaults will be used for unspecified parameters.
 #' @param color, the attribute on which to color the data points in the shot chart
 #' passed as a character vector
-#' @return A ggplot object.
+#' @return A list containing a ggplot object with the shot chart and a data frame containing
+#' the raw data from which the shot chart was built.
 #' @import ggplot2
 #' @export
 #' @examples
@@ -174,5 +175,5 @@ shotChart <- function(d = NULL, params = NULL, color = "EVENT_TYPE"){
   p <- courtOutlinePlot() +
     geom_point(data = d, aes_string(x = "as.numeric(LOC_X)", y = "as.numeric(LOC_Y)", color = color)) +
     labs(color = NULL, title = d$PLAYER_NAME[1])
-  p
+  list(plot = p, data = d)
 }

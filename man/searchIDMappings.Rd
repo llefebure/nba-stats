@@ -4,12 +4,14 @@
 \alias{searchIDMappings}
 \title{Search ID mappings}
 \usage{
-searchIDMappings(player = NA, team = NA)
+searchIDMappings(player = NA, team = NA, active = TRUE)
 }
 \arguments{
 \item{player, }{player name to search for as a regex pattern (see \link{regex})}
 
 \item{team, }{team name to search for as a regex pattern (see \link{regex})}
+
+\item{active, }{flag indicating that only active players should be searched}
 }
 \value{
 Returns a list containing one or two (depending on which of player and team is specified) 

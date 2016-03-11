@@ -205,19 +205,23 @@ memGetIDMappings <- memoise::memoise(getIDMappings)
 #' \code{\link{getGenericData}} for several endpoints.
 #' @param player, player name to search for as a regex pattern (see \link{regex})
 #' @param team, team name to search for as a regex pattern (see \link{regex})
+#' @param active, flag indicating that only active players should be searched
 #' @return Returns a list containing one or two (depending on which of player and team is specified) 
 #' data frame(s) containing matches.
 #' @export
 #' @examples
 #' searchIDMappings(player = "curry")
 #' searchIDMappings(player = "curry", team = "golden state")
-searchIDMappings <- function(player = NA, team = NA) {
+searchIDMappings <- function(player = NA, team = NA, active = TRUE) {
   mapping <- memGetIDMappings()
   if (missing(player) && missing(team)) {
     stop("Must specify either player or team.")
   }
   rv <- list()
   if (!is.na(player)) {
+    if (active) {
+      mapping$player <- mapping$player[mapping$player$ROSTERSTATUS == 1,]
+    }
     rv$player <- mapping$player[grep(player, mapping$player$PLAYER_NAME, ignore.case = TRUE),]
   }
   if (!is.na(team)) {

@@ -15,6 +15,9 @@ test_that("court outline plot", {
 test_that("shot chart", {
   p1 <- shotChart()
   p2 <- shotChart(d = stephCurryShots) # equivalent plot as above
-  expect_true("ggplot" %in% class(p1))
-  expect_true("ggplot" %in% class(p2))
+  expect_identical(names(p1), c("plot", "data"))
+  expect_identical(p1$data, stephCurryShots)
+  expect_identical(p2$data, stephCurryShots)
+  expect_true("ggplot" %in% class(p1$plot))
+  expect_true("ggplot" %in% class(p2$plot))
 })

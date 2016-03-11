@@ -17,7 +17,8 @@ specified as defaults will be used for unspecified parameters.}
 passed as a character vector}
 }
 \value{
-A ggplot object.
+A list containing a ggplot object with the shot chart and a data frame containing
+the raw data from which the shot chart was built.
 }
 \description{
 This function builds a shot chart from either the specified data frame
