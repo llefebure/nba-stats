@@ -1,0 +1,76 @@
+---
+title: "NBA Data Retrieval"
+author: "Luke Lefebure"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{NBA Data Retrieval}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+One of the core functionalities of the rNBA package is data retrieval from http://www.stats.nba.com/. All of the data belongs to the NBA, so please abide by their [Terms of Use](http://www.nba.com/news/termsofuse.html) when using and publishing any work resulting from the use of this package.
+
+This package considers two classes of data sources: generic data and player tracking data. Generic data is a blanket term for most of the data that can be found on http://www.stats.nba.com/. This includes everything from player bio information to historic draft results. Player tracking data refers specifically to advanced player stats that are found under the Player Tracking tab on the webiste.
+
+## Retrieving Generic Data
+
+The function for retrieving a generic data source is `getGenericData`. This function takes two arguments: a data source and a list of parameters for that data source. The available data sources can be explored with the `searchEndpoints` function, and the parameters for a specific data source are found with the `getEndpointParams` function.
+
+For example, let's say that I am interested in getting some information on Kobe Bryant, so I want to see what sources of player data are available.
+
+```{r}
+rNBA::searchEndpoints("player")
+```
+
+There are many sources of player data, but the "playercareerstats" one looks promising. Now I need to see what the required parameters for this source are.
+
+```{r}
+rNBA::getEndpointParams("playercareerstats")
+```
+
+There are two parameters for this data source: PerMode and PlayerID. For now, let's just say that I want PerMode to be "PerGame" and that I know that Kobe Bryant's ID is 977 (see below for more information on this). Now I can make a call to `getGenericData` to get this data source.
+
+```{r}
+player.career.stats <- rNBA::getGenericData(endpoint = "playercareerstats", 
+                                            params = list(PerMode = "PerGame", PlayerID = 977))
+```
+
+What did `getGenericData` return? In this case, we got a list of 8 data frames. In general, `getGenericData` will return a list of data frames, except when the list would have only one element, in which case just a data frame is returned.
+
+```{r}
+class(player.career.stats)
+lapply(player.career.stats, class)
+```
+
+Finally, let's take a look at one of these data frames. The first, for example, looks like it contains some basic stats (GP for games played, GS for games started, FGM for field goals made, etc.) for the player on a season by season basis.
+
+```{r}
+names(player.career.stats[[1]])
+```
+
+#### Parameter Formatting
+
+Above, the values for the "PerMode" and "PlayerID" parameters seemed to come out nowhere. First, consider the "PlayerID". This parameter (along with "TeamID") is very common, and it is a unique identifier. The `getIDMappings` function returns a mapping between player and team ID's and player and team names.
+
+```{r}
+m <- rNBA::getIDMappings()
+lapply(m, head)
+```
+
+However, unless you need the full mapping, a more convenient way to search for an ID is with the `searchIDMappings` function. The PlayerID for Kobe Bryant, for example, can be found as shown below.
+
+```{r}
+rNBA::searchIDMappings(player = "kobe")
+```
+
+For other parameters such as "PerMode", the meaning and appropriate values are sometimes self explanatory. However, often times they are not. See http://github.com/llefebure/nba-stats/wiki/Endpoint-Parameter-Format for a more complete guide on the meaning and format of parameters (and if you're interested, please help us build up that page!).
+
+## Retrieving Player Tracking Data
+
+The process for retrieving player tracking data is more straightforward. There is a single function `getPlayerTrackingData` that takes as parameters the year from which to return data (2014 refers to 2014-15 season) and the type (valid types are "catchShootData", "defenseData", "drivesData", "passingData", "touchesData", "pullUpShootData", "reboundingData", "shootingData", or "speedData"). This function returns a list of data frames if multiple types are requested, and a single data frame if only one type is requested. Refer to http://www.stats.nba.com/ for the meaning of most of these stats.
+
+```{r}
+drives <- rNBA::getPlayerTrackingData(year = 2015, "drivesData")
+names(drives)
+```
