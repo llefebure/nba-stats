@@ -181,10 +181,11 @@ shotChart <- function(d = NULL, params = NULL, color = "EVENT_TYPE"){
     for (nm in names(params)) {
       default.params[[nm]] <- params[[nm]]
     }
-    d <- memGetGenericData("shotchartdetail", default.params)[[1]]
-    if (is.null(d)) {
-      return(NULL)
+    d <- memGetGenericData("shotchartdetail", default.params)
+    if (is.null(d) || length(d) != 2) {
+      stop("Unable to build shot chart. Data returned by stats.nba.com incorrectly formatted.")
     }
+    d <- d[[1]]
   }
   p <- courtOutlinePlot() +
     geom_point(data = d, aes_string(x = "as.numeric(LOC_X)", y = "as.numeric(LOC_Y)", color = color)) +

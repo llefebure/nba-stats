@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-This package allows the user to build custom shot charts. A shot chart is a scatterplot of the locations from which a player takes shots overlayed onto an outline of the court. They are a very powerful visualization tool to analyze the shooting preferences and efficiency of players.
+This package allows the user to build custom shot charts. A shot chart is a scatterplot of the locations from which a player takes shots overlayed onto an outline of the court. They are a very powerful visualization tool to analyze the shooting preferences and efficiency of players. Raw shots data can be retrieved with `getGenericData` through the "shotchartdetail" endpoint.
 
 ## Plotting the Court
 
@@ -39,15 +39,29 @@ p
 
 ## Basic Shot Charts
 
-The above functions can be used as a starting point for building a custom shot chart. However, the package also includes a function `shotChart` that builds a basic complete shot chart. With no arguments, this function will produce a default chart for Steph Curry. Arguments can be supplied to customize.
+The above functions can be used as a starting point for building a custom shot chart. However, the package also includes a function `shotChart` that builds a basic complete shot chart. This function returns a list with two elements: the plot and the raw data from which the plot was built. With no arguments, this function will produce a default chart for Steph Curry.
 
 ```{r fig.width=5, fig.height=5}
 sc1 <- rNBA::shotChart()
 sc1$plot
 ```
 
+Arguments can be supplied to customize. The params argument takes in a list of parameters in the same format as `getGenericData` for the "shotchartdetail" endpoint. Thus, the paremeters that can be supplied are shown below. However, the user need not specify all of these, because the `shotChart` function will use defaults for any of the non specified parameters.
+
+```{r}
+rNBA::getEndpointParams("shotchartdetail")
+```
+
+`shotChart` also can take a color parameter that defines which attribute to color points by in the shot chart. Valid options for this are any attribute returned by the "shotchartdetail" endpoint, which are those shown below.
+
+```{r}
+names(sc1$data)
+```
+
+A custom shot chart can thus be built as follows.
+
 ```{r fig.width=6, fig.height=5}
-rNBA::searchIDMappings(player = "Ish Smith")
-sc2 <- rNBA::shotChart(params = list(PlayerID = 202397), color = "SHOT_ZONE_BASIC")
+rNBA::searchIDMappings(player = "lebron")
+sc2 <- rNBA::shotChart(params = list(PlayerID = 2544), color = "SHOT_ZONE_BASIC")
 sc2$plot
 ```
