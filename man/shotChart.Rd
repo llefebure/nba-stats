@@ -25,7 +25,10 @@ This function builds a shot chart from either the specified data frame
 or the specified parameters.
 }
 \examples{
-shotChart()
-shotChart(params = list(PlayerID = 101106))
+default <- shotChart()
+default$plot
+####
+andrew.bogut <- shotChart(params = list(PlayerID = 101106))
+andrew.bogut$plot
 }
 
