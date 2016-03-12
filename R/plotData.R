@@ -165,8 +165,11 @@ courtOutlinePlot <- function() {
 #' @import ggplot2
 #' @export
 #' @examples
-#' shotChart()
-#' shotChart(params = list(PlayerID = 101106))
+#' default <- shotChart()
+#' default$plot
+#' ####
+#' andrew.bogut <- shotChart(params = list(PlayerID = 101106))
+#' andrew.bogut$plot
 shotChart <- function(d = NULL, params = NULL, color = "EVENT_TYPE"){
   if (missing(d) && missing(params)) {
     d <- rNBA::stephCurryShots
