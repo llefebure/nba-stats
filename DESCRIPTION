@@ -4,12 +4,13 @@ Version: 0.0.0.9000
 Authors@R: c(person("Luke", "Lefebure", email = "luke.lefebure@gmail.com", role = c("aut", "cre")), person("Vineet", "Ahluwalia", email = "vineetahluwalia1@gmail.com", role = c("aut")))
 Description: rNBA provides easy access to data hosted on stats.nba.com, and it
     provides tools for exploring the data.
-Depends: 
+Depends:
     R (>= 3.2.3)
 License: GPL (>= 2)
 LazyData: true
 RoxygenNote: 5.0.1
-Imports: jsonlite
+Imports: jsonlite,
+    shiny
 Suggests: knitr,
     rmarkdown,
     testthat

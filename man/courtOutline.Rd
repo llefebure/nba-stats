@@ -20,7 +20,7 @@ in the same coordinates as those returned by the "shotchartdetail" endpoint.
 }
 \examples{
 court <- courtOutline()
-plot(x = NULL, xlim = c(-275, 275), ylim = c(-80, 430), xaxt = "n", yaxt = "n", ann = FALSE)
+plot(x = NULL, xlim = c(-275, 275), ylim = c(-80, 450), xaxt = "n", yaxt = "n", ann = FALSE)
 for (nm in unique(court$type)) {
    s <- court$type == nm
    points(x = court$x[s], y = court$y[s], type = "l", lty = court$ltype[s])
