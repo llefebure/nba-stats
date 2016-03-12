@@ -42,6 +42,7 @@ courtOutline <- function() {
   three.straight.len <- 14
   three.arc.radius <- 23.75
   restricted.radius <- 4
+  half.circle.radius <- 6
   
   # sideline and baseline
   side.base <- data.frame(x = c(rep(-court.width/2, 2), rep(court.width/2, 2)),
@@ -104,8 +105,21 @@ courtOutline <- function() {
                                type = "Restricted Area",
                                ltype = "solid")
   
+  # half court
+  half.court <- data.frame(x = c(-court.width/2, court.width/2),
+                           y = rep(court.length/2, 2),
+                           type = "Half Court",
+                           ltype = "solid")
+    
+  # half circle
+  half.circle.x <- seq(from = -half.circle.radius, to = half.circle.radius, by = precision)
+  half.circle <- data.frame(x = half.circle.x,
+                            y = -sqrt(half.circle.radius**2 - half.circle.x**2) + court.length/2,
+                            type = "Half Circle",
+                            ltype = "solid")
+  
   court.lines <- rbind(side.base, key, ft.circle.upper, ft.circle.lower, three.point.line, backboard,
-                       hoop, hoop.connector, restricted.arc)
+                       hoop, hoop.connector, restricted.arc, half.court, half.circle)
   
   # change to appropriate type
   court.lines$type <- as.character(court.lines$type)
