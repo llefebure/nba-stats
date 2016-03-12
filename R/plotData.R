@@ -1,8 +1,8 @@
 # Author: Luke Lefebure
 
-if(getRversion() >= "2.15.1")  {
-  utils::globalVariables(c("stephCurryShots"))
-}
+# if(getRversion() >= "2.15.1")  {
+#   utils::globalVariables(c("stephCurryShots"))
+# }
 
 #' Get the coordinates of lines on the court
 #' 
@@ -155,7 +155,7 @@ courtOutlinePlot <- function() {
 #' shotChart(params = list(PlayerID = 101106))
 shotChart <- function(d = NULL, params = NULL, color = "EVENT_TYPE"){
   if (missing(d) && missing(params)) {
-    d <- stephCurryShots
+    d <- rNBA::stephCurryShots
   } else if (missing(d)){
     # default options
     default.params <- list(SeasonType = "Regular+Season", TeamID = 0, PlayerID = 201939, 
@@ -174,6 +174,6 @@ shotChart <- function(d = NULL, params = NULL, color = "EVENT_TYPE"){
   }
   p <- courtOutlinePlot() +
     geom_point(data = d, aes_string(x = "as.numeric(LOC_X)", y = "as.numeric(LOC_Y)", color = color)) +
-    labs(color = NULL, title = d$PLAYER_NAME[1])
+    labs(title = d$PLAYER_NAME[1])
   list(plot = p, data = d)
 }

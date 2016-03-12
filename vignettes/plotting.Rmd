@@ -1,0 +1,53 @@
+---
+title: "Custom Shot Charts"
+author: "Luke Lefebure"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Custom Shot Charts}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+This package allows the user to build custom shot charts. A shot chart is a scatterplot of the locations from which a player takes shots overlayed onto an outline of the court. They are a very powerful visualization tool to analyze the shooting preferences and efficiency of players.
+
+## Plotting the Court
+
+This package provides two functions for assisting in plotting the lines of an NBA court: `courtOutline` and `courtOutlinePlot`. The first returns a data frame of coordinates of line segments that, when connected, draw the lines of an NBA court.
+
+```{r}
+court <- rNBA::courtOutline()
+head(court)
+```
+
+Using base graphics, the lines can be plotted as follows. 
+
+```{r fig.width=5, fig.height=5}
+plot(x = NULL, xlim = c(-275, 275), ylim = c(-80, 450), xaxt = "n", yaxt = "n", ann = FALSE)
+for (nm in unique(court$type)) {
+   s <- court$type == nm
+   points(x = court$x[s], y = court$y[s], type = "l", lty = court$ltype[s])
+}
+```
+
+The second function, `courtOutlinePlot`, essentially produces the same plot as above except that it uses ggplot. This function would likely be preferable for almost all applications, as ggplot makes it easy to add layers.
+
+```{r fig.width=5, fig.height=5}
+p <- rNBA::courtOutlinePlot()
+p
+```
+
+## Basic Shot Charts
+
+The above functions can be used as a starting point for building a custom shot chart. However, the package also includes a function `shotChart` that builds a basic complete shot chart. With no arguments, this function will produce a default chart for Steph Curry. Arguments can be supplied to customize.
+
+```{r fig.width=5, fig.height=5}
+sc1 <- rNBA::shotChart()
+sc1$plot
+```
+
+```{r fig.width=6, fig.height=5}
+rNBA::searchIDMappings(player = "Ish Smith")
+sc2 <- rNBA::shotChart(params = list(PlayerID = 202397), color = "SHOT_ZONE_BASIC")
+sc2$plot
+```
