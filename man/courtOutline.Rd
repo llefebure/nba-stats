@@ -19,6 +19,7 @@ baseline, three point line, etc.) for building custom shot charts. They are expr
 in the same coordinates as those returned by the "shotchartdetail" endpoint.
 }
 \examples{
+## plot court using base graphics
 court <- courtOutline()
 plot(x = NULL, xlim = c(-275, 275), ylim = c(-80, 450), xaxt = "n", yaxt = "n", ann = FALSE)
 for (nm in unique(court$type)) {

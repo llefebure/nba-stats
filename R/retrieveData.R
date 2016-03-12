@@ -13,7 +13,7 @@
 #' @export
 #' @examples
 #' player.info.endpoint <- "commonplayerinfo"
-#' player.info.params <- list(PlayerID = 201939, IsOnlyCurrentSeason = 0, LeagueID = "00", Season = "2015-16")
+#' player.info.params <-list(PlayerID=201939,IsOnlyCurrentSeason=0,LeagueID="00",Season="2015-16")
 #' player.info <- getGenericData(player.info.endpoint, player.info.params)
 #' str(player.info)
 #' ######
@@ -29,8 +29,12 @@ getGenericData <- function(endpoint, params = list()){
     url <- buildGenericURL(endpoint, params)
     data <- jsonlite::fromJSON(url)
     return(jsonToDF(data))
-  }, error = function(e) cat(paste("Request failed. Make sure you passed in the parameters",
-                                   "correctly and that you are connected to the internet!")))
+  }, error = function(e) {
+    cat(paste("Request failed. Make sure you passed in the parameters",
+              "correctly (if applicable) and that you are connected to the internet!"))
+    closeAllConnections()
+    }
+  )
 }
 
 # Converts the JSON response to a data frame or a list of data frames (if the
@@ -119,7 +123,7 @@ getEndpointParams <- function(endpoint){
 #' @return A data frame or list of data frames (if multiple types specified) containing the requested data.
 #' @export
 #' @examples
-#' pt.data <- getPlayerTrackingData(year = 2014, c("defenseData", "catchshootdata"))
+#' pt.data <- getPlayerTrackingData(year = 2014, c("defenseData", "catchShootData"))
 #' str(pt.data)
 getPlayerTrackingData <- function(year, type = NULL){
   all.types <- c("catchShootData", "defenseData", "drivesData", 
@@ -148,7 +152,11 @@ getPlayerTrackingData <- function(year, type = NULL){
     } else {
       return(res)
     }
-  }, error = function(e) cat("One or more requests failed. Make sure you are connected to the internet!"))
+  }, error = function(e) {
+    cat("One or more requests failed. Make sure you are connected to the internet!")
+    closeAllConnections()
+    }
+  )
 }
 
 #' Get mappings from player name and team name to PlayerID and TeamID
@@ -156,8 +164,9 @@ getPlayerTrackingData <- function(year, type = NULL){
 #' @description For many endpoints, PlayerID or TeamID are required parameters. This function
 #' retrieves a mapping from player name to PlayerID for all players in NBA history and team name 
 #' to TeamID for all current teams. These ID's are used as parameters to pass in to 
-#' \code{\link{getGenericData}} for several endpoints. Use \code{\link{searchIDMappings}} to search
-#' these mappings for a specific player or team.
+#' \code{\link{getGenericData}} for several endpoints. If you only need to search for a few specific
+#' players or teams, use \code{\link{searchIDMappings}} instead as that function is just a convenient
+#' way to search this mapping.
 #' @return A list of length two containing data frames with the mappings.
 #' @export
 #' @examples 
@@ -188,22 +197,25 @@ getIDMappings <- function() {
 #' searches the mapping returned by \code{\link{getIDMappings}} for a specified player or team,
 #' and it returns the matches. These ID's are used as parameters to pass in to 
 #' \code{\link{getGenericData}} for several endpoints.
-#' @param mapping, the result of a call to \code{\link{getIDMappings}}.
 #' @param player, player name to search for as a regex pattern (see \link{regex})
 #' @param team, team name to search for as a regex pattern (see \link{regex})
+#' @param active, flag indicating that only active players should be searched
 #' @return Returns a list containing one or two (depending on which of player and team is specified) 
 #' data frame(s) containing matches.
 #' @export
 #' @examples
-#' m <- getIDMappings()
-#' searchIDMappings(m, player = "curry")
-#' searchIDMappings(m, player = "curry", team = "golden state")
-searchIDMappings <- function(mapping, player = NA, team = NA) {
-  if (is.na(player) && is.na(team)) {
+#' searchIDMappings(player = "curry")
+#' searchIDMappings(player = "curry", team = "golden state")
+searchIDMappings <- function(player = NA, team = NA, active = TRUE) {
+  mapping <- memGetIDMappings()
+  if (missing(player) && missing(team)) {
     stop("Must specify either player or team.")
   }
   rv <- list()
   if (!is.na(player)) {
+    if (active) {
+      mapping$player <- mapping$player[mapping$player$ROSTERSTATUS == 1,]
+    }
     rv$player <- mapping$player[grep(player, mapping$player$PLAYER_NAME, ignore.case = TRUE),]
   }
   if (!is.na(team)) {
@@ -212,3 +224,10 @@ searchIDMappings <- function(mapping, player = NA, team = NA) {
   }
   rv
 }
+
+# Memoised version of retrieval functions for internal use
+# Need to use importFrom rather than memoise::memoise because otherwise NOTE
+# is generated.
+#' @importFrom memoise memoise
+memGetGenericData <- memoise(getGenericData)
+memGetIDMappings <- memoise(getIDMappings)

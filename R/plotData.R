@@ -1,5 +1,9 @@
 # Author: Luke Lefebure
 
+# if(getRversion() >= "2.15.1")  {
+#   utils::globalVariables(c("stephCurryShots"))
+# }
+
 #' Get the coordinates of lines on the court
 #' 
 #' @description This function gets the coordinates of the lines on the court (sideline, 
@@ -14,6 +18,7 @@
 #' for more information about how an NBA court is laid out.
 #' @export
 #' @examples
+#' ## plot court using base graphics
 #' court <- courtOutline()
 #' plot(x = NULL, xlim = c(-275, 275), ylim = c(-80, 450), xaxt = "n", yaxt = "n", ann = FALSE)
 #' for (nm in unique(court$type)) {
@@ -37,6 +42,7 @@ courtOutline <- function() {
   three.straight.len <- 14
   three.arc.radius <- 23.75
   restricted.radius <- 4
+  half.circle.radius <- 6
   
   # sideline and baseline
   side.base <- data.frame(x = c(rep(-court.width/2, 2), rep(court.width/2, 2)),
@@ -99,8 +105,21 @@ courtOutline <- function() {
                                type = "Restricted Area",
                                ltype = "solid")
   
+  # half court
+  half.court <- data.frame(x = c(-court.width/2, court.width/2),
+                           y = rep(court.length/2, 2),
+                           type = "Half Court",
+                           ltype = "solid")
+    
+  # half circle
+  half.circle.x <- seq(from = -half.circle.radius, to = half.circle.radius, by = precision)
+  half.circle <- data.frame(x = half.circle.x,
+                            y = -sqrt(half.circle.radius**2 - half.circle.x**2) + court.length/2,
+                            type = "Half Circle",
+                            ltype = "solid")
+  
   court.lines <- rbind(side.base, key, ft.circle.upper, ft.circle.lower, three.point.line, backboard,
-                       hoop, hoop.connector, restricted.arc)
+                       hoop, hoop.connector, restricted.arc, half.court, half.circle)
   
   # change to appropriate type
   court.lines$type <- as.character(court.lines$type)
@@ -113,15 +132,66 @@ courtOutline <- function() {
   court.lines
 }
 
-shotChart <- function(){
-  params <- list(SeasonType="Regular+Season", TeamID=0, PlayerID=201939, GameID="", Outcome="", Location="", Month=0, SeasonSegment="", DateFrom="", DateTo="", OpponentTeamID=0, VsConference="", VsDivision="", Position="", RookieYear="", GameSegment="", Period=0, LastNGames=10, ContextMeasure="FGA", Season="2015-16")
-  d <- getGenericData("shotchartdetail", params)
+#' Plot the outline of the court
+#'
+#' @description This functions creates a ggplot object with the outline of an
+#' NBA court for building custom shot charts.
+#' @return A ggplot object with the outline of an NBA court.
+#' @export
+#' @examples
+#' courtOutlinePlot()
+courtOutlinePlot <- function() {
   court <- courtOutline()
   p <- ggplot() + 
-    geom_path(data = court, aes(x = x, y = y, group = type, linetype = ltype)) +
-    scale_linetype_manual(values = c(2, 1), guide = FALSE) +
-    geom_point(data = d[[1]], aes(x = as.numeric(d[[1]]$LOC_X), y = as.numeric(d[[1]]$LOC_Y), color = SHOT_MADE_FLAG))
+    geom_path(data = court, aes_string(x = "x", y = "y", group = "type", linetype = "ltype")) +
+    scale_linetype_manual(values = c(2, 1), guide = FALSE) + 
+    theme(axis.title = element_blank(), axis.ticks = element_blank(),
+          axis.text = element_blank(), panel.background = element_rect(fill = "white", colour = "white"))
+  p
 }
 
-
-# This is me Vin
+#' Build a shot chart for a player
+#' 
+#' @description This function builds a shot chart from either the specified data frame
+#' or the specified parameters.
+#' @param d, a data frame resulting from a call to getGenericData("shotchartdetail", ...)
+#' @param params, a list of parameters for a call to "shotchartdetail" (see
+#' getEndpointParams("shotchartdetail") for valid options). Not all need to be
+#' specified as defaults will be used for unspecified parameters.
+#' @param color, the attribute on which to color the data points in the shot chart
+#' passed as a character vector
+#' @return A list containing a ggplot object with the shot chart and a data frame containing
+#' the raw data from which the shot chart was built.
+#' @import ggplot2
+#' @export
+#' @examples
+#' default <- shotChart()
+#' default$plot
+#' ####
+#' andrew.bogut <- shotChart(params = list(PlayerID = 101106))
+#' andrew.bogut$plot
+shotChart <- function(d = NULL, params = NULL, color = "EVENT_TYPE"){
+  if (missing(d) && missing(params)) {
+    d <- rNBA::stephCurryShots
+  } else if (missing(d)){
+    # default options
+    default.params <- list(SeasonType = "Regular+Season", TeamID = 0, PlayerID = 201939, 
+                           GameID = "", Outcome = "", Location = "", Month = 0, 
+                           SeasonSegment = "", DateFrom = "", DateTo = "", 
+                           OpponentTeamID = 0, VsConference = "", VsDivision = "", 
+                           Position = "", RookieYear = "", GameSegment = "", Period=0, 
+                           LastNGames = 10, ContextMeasure = "FGA", Season = "2015-16")
+    for (nm in names(params)) {
+      default.params[[nm]] <- params[[nm]]
+    }
+    d <- memGetGenericData("shotchartdetail", default.params)
+    if (is.null(d) || length(d) != 2) {
+      stop("Unable to build shot chart. Data returned by stats.nba.com incorrectly formatted.")
+    }
+    d <- d[[1]]
+  }
+  p <- courtOutlinePlot() +
+    geom_point(data = d, aes_string(x = "as.numeric(LOC_X)", y = "as.numeric(LOC_Y)", color = color)) +
+    labs(title = d$PLAYER_NAME[1])
+  list(plot = p, data = d)
+}

@@ -23,7 +23,7 @@ params argument for the chosen endpoint.
 }
 \examples{
 player.info.endpoint <- "commonplayerinfo"
-player.info.params <- list(PlayerID = 201939, IsOnlyCurrentSeason = 0, LeagueID = "00", Season = "2015-16")
+player.info.params <-list(PlayerID=201939,IsOnlyCurrentSeason=0,LeagueID="00",Season="2015-16")
 player.info <- getGenericData(player.info.endpoint, player.info.params)
 str(player.info)
 ######
