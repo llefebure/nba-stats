@@ -13,33 +13,40 @@ This package allows the user to build custom shot charts. A shot chart is a scat
 
 ## Plotting the Court
 
-This package provides two functions for assisting in plotting the lines of an NBA court: `courtOutline` and `courtOutlinePlot`. The first returns a data frame of coordinates of line segments that, when connected, draw the lines of an NBA court.
+This package provides two functions for assisting in plotting the lines of an NBA court: `courtOutline` and `courtOutlinePlot`. The first returns a data frame of coordinates of line segments that, when connected, draw the lines of an NBA court. One optional parameter specifies whether to get the coordinates of the full court or only half the court (default is half court).
 
 ```{r}
-court <- rNBA::courtOutline()
-head(court)
+half.court <- rNBA::courtOutline()
+full.court <- rNBA::courtOutline(full = TRUE)
+head(half.court)
 ```
 
 Using base graphics, the lines can be plotted as follows. 
 
 ```{r fig.width=5, fig.height=5}
-plot(x = NULL, xlim = c(-275, 275), ylim = c(-80, 450), xaxt = "n", yaxt = "n", ann = FALSE)
-for (nm in unique(court$type)) {
-   s <- court$type == nm
-   points(x = court$x[s], y = court$y[s], type = "l", lty = court$ltype[s])
+examplePlotLines <- function(court) {
+  plot(x = NULL, xlim = range(court$x), ylim = range(court$y), xaxt = "n", yaxt = "n", ann = FALSE)
+  for (nm in unique(court$type)) {
+     s <- court$type == nm
+     points(x = court$x[s], y = court$y[s], type = "l", lty = court$ltype[s])
+  } 
 }
+examplePlotLines(half.court)
+examplePlotLines(full.court)
 ```
 
-The second function, `courtOutlinePlot`, essentially produces the same plot as above except that it uses ggplot. This function would likely be preferable for almost all applications, as ggplot makes it easy to add layers.
+The second function, `courtOutlinePlot`, essentially produces the same plot as above except that it uses ggplot. This function would likely be preferable for almost all applications, as ggplot makes it easy to add layers. Again, one optional parameter specifies whether to plot the full court or only half the court (default is half court).
 
 ```{r fig.width=5, fig.height=5}
-p <- rNBA::courtOutlinePlot()
-p
+p.half <- rNBA::courtOutlinePlot()
+p.full <- rNBA::courtOutlinePlot(full = TRUE)
+p.half
+p.full
 ```
 
 ## Basic Shot Charts
 
-The above functions can be used as a starting point for building a custom shot chart. However, the package also includes a function `shotChart` that builds a basic complete shot chart. This function returns a list with two elements: the plot and the raw data from which the plot was built. With no arguments, this function will produce a default chart for Steph Curry.
+The above functions can be used as a starting point for building a custom shot chart. Calling `getGenericData` with the "shotchartdetail" endpoint gets raw (x, y) coordinates of shots in the same coordinate axis as the above plots that can then be plotted directly on those plots. However, the package also includes a function `shotChart` that builds a basic complete shot chart for you. This function returns a list with two elements: the plot and the raw data from which the plot was built. With no arguments, this function will produce a default chart for Steph Curry using the stephCurryShots data that is attached to the package.
 
 ```{r fig.width=5, fig.height=5}
 sc1 <- rNBA::shotChart()

@@ -1,14 +1,12 @@
 # Author: Luke Lefebure
 
-# if(getRversion() >= "2.15.1")  {
-#   utils::globalVariables(c("stephCurryShots"))
-# }
-
 #' Get the coordinates of lines on the court
 #' 
 #' @description This function gets the coordinates of the lines on the court (sideline, 
 #' baseline, three point line, etc.) for building custom shot charts. They are expressed
 #' in the same coordinates as those returned by the "shotchartdetail" endpoint.
+#' @param full, flag indicating whether to return full court coordinates as opposed
+#' to half court coordinates. FALSE by default.
 #' @return A data frame containing coordinates of line segments that, when connected,
 #' draw the lines of an NBA court. The type column specifies which segment the point
 #' belongs to, and the ltype column specifies whether that line segment should be solid
@@ -20,12 +18,12 @@
 #' @examples
 #' ## plot court using base graphics
 #' court <- courtOutline()
-#' plot(x = NULL, xlim = c(-275, 275), ylim = c(-80, 450), xaxt = "n", yaxt = "n", ann = FALSE)
+#' plot(x = NULL, xlim = range(court$x), ylim = range(court$y), xaxt = "n", yaxt = "n", ann = FALSE)
 #' for (nm in unique(court$type)) {
 #'    s <- court$type == nm
 #'    points(x = court$x[s], y = court$y[s], type = "l", lty = court$ltype[s])
 #' }
-courtOutline <- function() {
+courtOutline <- function(full = FALSE) {
   precision <- .05 # this controls distance between points when plotting arcs
   
   # court dimensions
@@ -121,6 +119,14 @@ courtOutline <- function() {
   court.lines <- rbind(side.base, key, ft.circle.upper, ft.circle.lower, three.point.line, backboard,
                        hoop, hoop.connector, restricted.arc, half.court, half.circle)
   
+  # get full court lines
+  if (full) {
+    mirror <- court.lines[court.lines$type != "Half Court",]
+    mirror$y <- court.length - mirror$y
+    mirror$type <- paste(mirror$type, "(Mirror)")
+    court.lines <- rbind(court.lines, mirror)                    
+  }
+  
   # change to appropriate type
   court.lines$type <- as.character(court.lines$type)
   court.lines$ltype <- as.character(court.lines$ltype)
@@ -136,12 +142,15 @@ courtOutline <- function() {
 #'
 #' @description This functions creates a ggplot object with the outline of an
 #' NBA court for building custom shot charts.
+#' @param full, flag indicating whether to plot the full court as opposed to
+#' half court coordinates. FALSE by default.
 #' @return A ggplot object with the outline of an NBA court.
 #' @export
 #' @examples
 #' courtOutlinePlot()
-courtOutlinePlot <- function() {
-  court <- courtOutline()
+#' courtOutlinePlot(full = TRUE)
+courtOutlinePlot <- function(full = FALSE) {
+  court <- courtOutline(full)
   p <- ggplot() + 
     geom_path(data = court, aes_string(x = "x", y = "y", group = "type", linetype = "ltype")) +
     scale_linetype_manual(values = c(2, 1), guide = FALSE) + 
@@ -190,7 +199,9 @@ shotChart <- function(d = NULL, params = NULL, color = "EVENT_TYPE"){
     }
     d <- d[[1]]
   }
-  p <- courtOutlinePlot() +
+  half.court <- 417.5 # y coordinate of half court
+  full <- ifelse(max(as.numeric(d$LOC_Y)) > half.court, TRUE, FALSE)
+  p <- courtOutlinePlot(full) +
     geom_point(data = d, aes_string(x = "as.numeric(LOC_X)", y = "as.numeric(LOC_Y)", color = color)) +
     labs(title = d$PLAYER_NAME[1])
   list(plot = p, data = d)

@@ -4,7 +4,11 @@
 \alias{courtOutline}
 \title{Get the coordinates of lines on the court}
 \usage{
-courtOutline()
+courtOutline(full = FALSE)
+}
+\arguments{
+\item{full, }{flag indicating whether to return full court coordinates as opposed
+to half court coordinates. FALSE by default.}
 }
 \value{
 A data frame containing coordinates of line segments that, when connected,
@@ -21,7 +25,7 @@ in the same coordinates as those returned by the "shotchartdetail" endpoint.
 \examples{
 ## plot court using base graphics
 court <- courtOutline()
-plot(x = NULL, xlim = c(-275, 275), ylim = c(-80, 450), xaxt = "n", yaxt = "n", ann = FALSE)
+plot(x = NULL, xlim = range(court$x), ylim = range(court$y), xaxt = "n", yaxt = "n", ann = FALSE)
 for (nm in unique(court$type)) {
    s <- court$type == nm
    points(x = court$x[s], y = court$y[s], type = "l", lty = court$ltype[s])

@@ -4,7 +4,11 @@
 \alias{courtOutlinePlot}
 \title{Plot the outline of the court}
 \usage{
-courtOutlinePlot()
+courtOutlinePlot(full = FALSE)
+}
+\arguments{
+\item{full, }{flag indicating whether to plot the full court as opposed to
+half court coordinates. FALSE by default.}
 }
 \value{
 A ggplot object with the outline of an NBA court.
@@ -15,5 +19,6 @@ NBA court for building custom shot charts.
 }
 \examples{
 courtOutlinePlot()
+courtOutlinePlot(full = TRUE)
 }
 
