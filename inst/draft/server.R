@@ -3,6 +3,8 @@
 library(shiny)
 library(ggplot2)
 
+d <- rNBA::draftHistory
+
 shinyServer(function(input, output) {
 
   plot <- reactive({

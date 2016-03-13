@@ -1,3 +1,5 @@
+# Author: Luke Lefebure
+
 #' An R package for retrieving stats from the NBA.
 #'
 #' @docType package
