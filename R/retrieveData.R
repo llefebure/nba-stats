@@ -62,12 +62,16 @@ jsonToDF <- function(data) {
   }
 }
 
-# This function is called by getGenericData to build the appropriate 
-# URL for retrieving data. 
-#
-# @param endpoint, endpoint to retrieve as a character vector
-# @param params, list of parameters
-# @return A full URL for retrieving the specified data.
+#' Build the URL for a generic data source
+#'
+#' @description This function is called by \code{\link{getGenericData}} to build the
+#' URL for retrieving the specified data source.
+#' @param endpoint, endpoint to retrieve as a character vector
+#' @param params, list of parameters
+#' @return A full URL for retrieving the specified data.
+#' @export
+#' @examples
+#' buildGenericURL("drafthistory", params = list(LeagueID = "00"))
 buildGenericURL <- function(endpoint, params = list()){
   base <- "http://stats.nba.com/stats/"
   param.list <- paste(paste(names(params), unlist(params), sep = "="), collapse = "&")
