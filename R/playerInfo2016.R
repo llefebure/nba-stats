@@ -1,6 +1,6 @@
 # Author: Luke Lefebure
 
-#' Info for active NBA players as of March 2016
+#' Player Info Data
 #'
 #' @description A data frame containing info such as country, college, height,
 #' weight, position, etc. for all active NBA players as of March 2016. This
