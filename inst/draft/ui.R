@@ -2,22 +2,23 @@
 
 library(shiny)
 
+d <- rNBA::draftHistory
+colleges <- sort(unique(d$ORGANIZATION[d$ORGANIZATION_TYPE == "College/University"]))
+previous.org <- sort(unique(d$ORGANIZATION[d$ORGANIZATION_TYPE != "College/University"]))
+
 shinyUI(fluidPage(
 
-  # Application title
-  titlePanel("Old Faithful Geyser Data"),
+  titlePanel("NBA Draft History"),
 
-  # Sidebar with a slider input for number of bins
   sidebarLayout(
     sidebarPanel(
-      sliderInput("bins",
-                  "Number of bins:",
-                  min = 1,
-                  max = 50,
-                  value = 30)
+      
+      selectInput("college",
+                  "College:",
+                  choices = colleges,
+                  selected = "Stanford")
     ),
 
-    # Show a plot of the generated distribution
     mainPanel(
       plotOutput("distPlot")
     )
