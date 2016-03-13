@@ -16,11 +16,13 @@ shinyUI(fluidPage(
       selectInput("college",
                   "College:",
                   choices = colleges,
-                  selected = "Stanford")
+                  selected = "Stanford"),
+      
+      downloadButton("downloadPlot", label = "Download Plot")
     ),
 
     mainPanel(
-      plotOutput("distPlot")
+      plotOutput("plot")
     )
   )
 ))
