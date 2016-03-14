@@ -1,5 +1,9 @@
 # Author: Luke Lefebure
 
+if(getRversion() >= "2.15.1")  {
+  utils::globalVariables(c("type"))
+}
+
 #' Get the coordinates of lines on the court
 #' 
 #' @description This function gets the coordinates of the lines on the court (sideline, 
@@ -14,7 +18,6 @@
 #' center of the hoop, the same as that returned by the "shotchartdetail" endpoint.
 #' @references See \url{http://www.sportsknowhow.com/basketball/dimensions/nba-basketball-court-dimensions.html}
 #' for more information about how an NBA court is laid out.
-#' @importFrom dplyr `%>%`
 #' @export
 #' @examples
 #' ## plot court using base graphics
@@ -122,7 +125,7 @@ courtOutline <- function(full = FALSE) {
   
   # get full court lines
   if (full) {
-    mirror <- court.lines %>% dplyr::filter(type != "Half Court")
+    mirror <- dplyr::filter(court.lines, type != "Half Court")
     mirror$y <- court.length - mirror$y
     mirror$type <- paste(mirror$type, "(Mirror)")
     court.lines <- rbind(court.lines, mirror)                    
