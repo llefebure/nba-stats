@@ -1,23 +1,23 @@
 # Author: Luke Lefebure
 
 library(shiny)
-library(ggplot2)
-library(dplyr)
 
+`%>%` <- dplyr::`%>%`
 d <- rNBA::draftHistory
 
 shinyServer(function(input, output) {
 
   filtered.f <- reactive({
-    x <- d %>% filter(ORGANIZATION == input$college, SEASON >= as.character(input$dateRange[1]),
-                      SEASON <= as.character(input$dateRange[2]))
+    x <- d %>% dplyr::filter(ORGANIZATION == input$college, 
+                             SEASON >= as.character(input$dateRange[1]), 
+                             SEASON <= as.character(input$dateRange[2]))
   })
   
   plot <- reactive({
-    p <- ggplot(filtered.f(), aes(x = reorder(TEAM_ABBREVIATION, TEAM_ABBREVIATION, 
-                                            function(x) -length(x)))) + 
-      geom_bar() + 
-      labs(x = "Team", y = "Number of Picks", title = input$college)
+    p <- ggplot2::ggplot(filtered.f(), aes(x = reorder(TEAM_ABBREVIATION, TEAM_ABBREVIATION, 
+                                                       function(x) -length(x)))) + 
+      ggplot2::geom_bar() + 
+      ggplot2::labs(x = "Team", y = "Number of Picks", title = input$college)
   })
   
   output$playerTable <- renderTable(
@@ -26,10 +26,10 @@ shinyServer(function(input, output) {
   
   output$teamKey <- renderTable(
     filtered.f() %>% 
-      mutate(TEAM = paste(TEAM_CITY, TEAM_NAME), ABBR = TEAM_ABBREVIATION) %>%
-      distinct(TEAM) %>%
-      select(TEAM, ABBR) %>%
-      arrange(ABBR))
+      dplyr::mutate(TEAM = paste(TEAM_CITY, TEAM_NAME), ABBR = TEAM_ABBREVIATION) %>%
+      dplyr::distinct(TEAM) %>%
+      dplyr::select(TEAM, ABBR) %>%
+      dplyr::arrange(ABBR))
   
   output$plot <- renderPlot({
     print(plot())

@@ -1,14 +1,15 @@
 # Author: Luke Lefebure
 
 library(shiny)
-library(dplyr)
+
+`%>%` <- dplyr::`%>%`
 
 d <- rNBA::draftHistory
 colleges <- d %>% 
-  filter(ORGANIZATION_TYPE == "College/University") %>%
-  select(ORGANIZATION) %>%
-  distinct(ORGANIZATION) %>%
-  arrange(ORGANIZATION)
+  dplyr::filter(ORGANIZATION_TYPE == "College/University") %>%
+  dplyr::select(ORGANIZATION) %>%
+  dplyr::distinct(ORGANIZATION) %>%
+  dplyr::arrange(ORGANIZATION)
 
 shinyUI(fluidPage(
 
