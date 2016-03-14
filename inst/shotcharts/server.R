@@ -52,8 +52,8 @@ shinyServer(function(input, output) {
                            Position = "", RookieYear = "", GameSegment = "", Period=0, 
                            LastNGames = 30, ContextMeasure = "FGA", Season = "2015-16")
     
-    shotChartData <- rNBA::getGenericData("shotchartdetail", default.params)
-    #d <- rNBA::memGetGenericData("shotchartdetail", default.params) # memoised version
+    #shotChartData <- rNBA::getGenericData("shotchartdetail", default.params)
+    shotChartData <- rNBA::memGetGenericData("shotchartdetail", default.params) # memoised version
     d$values <- shotChartData[[1]]
   })
   
