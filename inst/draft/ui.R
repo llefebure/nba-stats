@@ -3,8 +3,11 @@
 library(shiny)
 
 d <- rNBA::draftHistory
-colleges <- sort(unique(d$ORGANIZATION[d$ORGANIZATION_TYPE == "College/University"]))
-previous.org <- sort(unique(d$ORGANIZATION[d$ORGANIZATION_TYPE != "College/University"]))
+colleges <- d %>% 
+  filter(ORGANIZATION_TYPE == "College/University") %>%
+  select(ORGANIZATION) %>%
+  distinct(ORGANIZATION) %>%
+  arrange(ORGANIZATION)
 
 shinyUI(fluidPage(
 
@@ -15,14 +18,25 @@ shinyUI(fluidPage(
       
       selectInput("college",
                   "College:",
-                  choices = colleges,
+                  choices = colleges[,1],
                   selected = "Stanford"),
       
-      downloadButton("downloadPlot", label = "Download Plot")
+      dateRangeInput("dateRange",
+                     label = "Date Range",
+                     start = as.Date("1947", format = "%Y"),
+                     end = as.Date("2015", format = "%Y"),
+                     min = as.Date(min(d$SEASON), format = "%Y"), 
+                     max = as.Date(max(d$SEASON), format = "%Y"),
+                     separator = " - ", format = "yyyy",
+                     startview = "year"),
+      
+      downloadButton("downloadPlot", label = "Download Plot"),
+      tableOutput("teamKey")
     ),
 
     mainPanel(
-      plotOutput("plot")
+      plotOutput("plot"),
+      tableOutput("playerTable")
     )
   )
 ))

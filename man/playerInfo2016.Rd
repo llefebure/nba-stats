@@ -3,7 +3,7 @@
 \docType{data}
 \name{playerInfo2016}
 \alias{playerInfo2016}
-\title{Info for active NBA players as of March 2016}
+\title{Player Info Data}
 \description{
 A data frame containing info such as country, college, height,
 weight, position, etc. for all active NBA players as of March 2016. This
