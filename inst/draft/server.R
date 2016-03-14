@@ -14,15 +14,15 @@ shinyServer(function(input, output) {
   })
   
   plot <- reactive({
-    p <- ggplot2::ggplot(filtered.f(), aes(x = reorder(TEAM_ABBREVIATION, TEAM_ABBREVIATION, 
-                                                       function(x) -length(x)))) + 
+    p <- ggplot2::ggplot(filtered.f(), ggplot2::aes(x = reorder(TEAM_ABBREVIATION, TEAM_ABBREVIATION, 
+                                                                function(x) -length(x)))) + 
       ggplot2::geom_bar() + 
       ggplot2::labs(x = "Team", y = "Number of Picks", title = input$college)
   })
   
   output$playerTable <- renderTable(
-    select(filtered.f(), PLAYER_NAME, SEASON, ROUND_NUMBER, ROUND_PICK, 
-           OVERALL_PICK, TEAM_CITY, TEAM_NAME, TEAM_ABBREVIATION))
+    dplyr::select(filtered.f(), PLAYER_NAME, SEASON, ROUND_NUMBER, ROUND_PICK, 
+                  OVERALL_PICK, TEAM_CITY, TEAM_NAME, TEAM_ABBREVIATION))
   
   output$teamKey <- renderTable(
     filtered.f() %>% 
