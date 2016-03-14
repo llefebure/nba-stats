@@ -229,9 +229,15 @@ searchIDMappings <- function(player = NA, team = NA, active = TRUE) {
   rv
 }
 
-# Memoised version of retrieval functions for internal use
-# Need to use importFrom rather than memoise::memoise because otherwise NOTE
-# is generated.
+#' Memoised version of getGenericData
+#' 
+#' @description See \code{\link{getGenericData}}.
+#' @export
 #' @importFrom memoise memoise
 memGetGenericData <- memoise(getGenericData)
+
+#' Memoised version of getIDMappings
+#' 
+#' @description See \code{\link{getIDMappings}}.
+#' @export
 memGetIDMappings <- memoise(getIDMappings)
