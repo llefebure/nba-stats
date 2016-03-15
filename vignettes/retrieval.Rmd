@@ -51,7 +51,7 @@ names(player.career.stats[[1]])
 
 #### Parameter Formatting
 
-Above, the values for the "PerMode" and "PlayerID" parameters seemed to come out nowhere. First, consider the "PlayerID". This parameter (along with "TeamID") is very common, and it is a unique identifier. The `getIDMappings` function returns a mapping between player and team ID's and player and team names.
+Above, the values for the "PerMode" and "PlayerID" parameters seemed to come out of nowhere. First, consider the "PlayerID". This parameter (along with "TeamID") is very common, and it is a unique identifier. The `getIDMappings` function returns a mapping between player and team ID's and player and team names.
 
 ```{r}
 m <- rNBA::getIDMappings()
