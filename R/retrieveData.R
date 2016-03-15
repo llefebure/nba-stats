@@ -231,13 +231,24 @@ searchIDMappings <- function(player = NA, team = NA, active = TRUE) {
 
 #' Memoised version of getGenericData
 #' 
-#' @description See \code{\link{getGenericData}}.
+#' @description This function behaves exactly the same as \code{\link{getGenericData}}
+#' except that it is memoised. This prevents the code from making the same HTTP request
+#' multiple times. If you are careful about not making the same call twice in your code,
+#' there is no reason to use this function.
+#' @param endpoint, endpoint to retrieve as a character vector
+#' @param params, list of parameters
+#' @return A data frame or a list of data frames (if the endpoint returns multiple 
+#' datasets) containing the requested data.
 #' @export
 #' @importFrom memoise memoise
 memGetGenericData <- memoise(getGenericData)
 
 #' Memoised version of getIDMappings
 #' 
-#' @description See \code{\link{getIDMappings}}.
+#' @description This function behaves exactly the same as \code{\link{getIDMappings}}
+#' except that it is memoised. This prevents the code from making the same HTTP request
+#' multiple times. If you call \code{\link{getIDMappings}} only once in your code, there
+#' is no reason to use this function.
+#' @return A list of length two containing data frames with the mappings.
 #' @export
 memGetIDMappings <- memoise(getIDMappings)

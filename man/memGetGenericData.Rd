@@ -6,7 +6,19 @@
 \usage{
 memGetGenericData(endpoint, params = list())
 }
+\arguments{
+\item{endpoint, }{endpoint to retrieve as a character vector}
+
+\item{params, }{list of parameters}
+}
+\value{
+A data frame or a list of data frames (if the endpoint returns multiple 
+datasets) containing the requested data.
+}
 \description{
-See \code{\link{getGenericData}}.
+This function behaves exactly the same as \code{\link{getGenericData}}
+except that it is memoised. This prevents the code from making the same HTTP request
+multiple times. If you are careful about not making the same call twice in your code,
+there is no reason to use this function.
 }
 

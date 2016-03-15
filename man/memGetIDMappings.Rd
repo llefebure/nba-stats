@@ -6,7 +6,13 @@
 \usage{
 memGetIDMappings()
 }
+\value{
+A list of length two containing data frames with the mappings.
+}
 \description{
-See \code{\link{getIDMappings}}.
+This function behaves exactly the same as \code{\link{getIDMappings}}
+except that it is memoised. This prevents the code from making the same HTTP request
+multiple times. If you call \code{\link{getIDMappings}} only once in your code, there
+is no reason to use this function.
 }
 
