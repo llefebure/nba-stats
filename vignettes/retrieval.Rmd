@@ -11,7 +11,7 @@ vignette: >
 
 One of the core functionalities of the rNBA package is data retrieval from http://stats.nba.com/. All of the data belongs to the NBA, so please abide by their [Terms of Use](http://www.nba.com/news/termsofuse.html) when using and publishing any work resulting from the use of this package.
 
-This package considers two classes of data sources: generic data and player tracking data. Generic data is a blanket term for most of the data that can be found on http://www.stats.nba.com/. This includes everything from player bio information to historic draft results. Player tracking data refers specifically to advanced player stats that are found under the Player Tracking tab on the webiste.
+This package considers two classes of data sources: generic data and player tracking data. Generic data is a blanket term for most of the data that can be found on http://stats.nba.com/. This includes everything from player bio information to historic draft results. Player tracking data refers specifically to advanced player stats that are found under the Player Tracking tab on the webiste.
 
 ## Retrieving Generic Data
 
