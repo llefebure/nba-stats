@@ -11,8 +11,8 @@ shinyServer(function(input, output) {
     x <- d %>% dplyr::filter(ORGANIZATION == input$college, 
                              SEASON >= as.character(input$dateRange[1]), 
                              SEASON <= as.character(input$dateRange[2])) %>%
-      mutate(DecadeStart = floor(as.numeric(SEASON)/10)*10, 
-             Decade = paste(DecadeStart, DecadeStart + 10, sep = "-"))
+      dplyr::mutate(DecadeStart = floor(as.numeric(SEASON)/10)*10, 
+                    Decade = paste(DecadeStart, DecadeStart + 10, sep = "-"))
   })
   
   plot <- reactive({
@@ -27,10 +27,10 @@ shinyServer(function(input, output) {
   
   output$playerTable <- renderTable(
     filtered.d() %>%
-      mutate(Team = paste(TEAM_CITY, TEAM_NAME, paste0("(", TEAM_ABBREVIATION, ")"))) %>%
-      select(PLAYER_NAME, SEASON, ROUND_NUMBER, ROUND_PICK, OVERALL_PICK, Team) %>%
-      rename(Name = PLAYER_NAME, Season = SEASON, Round = ROUND_NUMBER,
-             "Round Pick" = ROUND_PICK, "Overall" = OVERALL_PICK))
+      dplyr::mutate(Team = paste(TEAM_CITY, TEAM_NAME, paste0("(", TEAM_ABBREVIATION, ")"))) %>%
+      dplyr::select(PLAYER_NAME, SEASON, ROUND_NUMBER, ROUND_PICK, OVERALL_PICK, Team) %>%
+      dplyr::rename(Name = PLAYER_NAME, Season = SEASON, Round = ROUND_NUMBER,
+                    "Round Pick" = ROUND_PICK, "Overall" = OVERALL_PICK))
   
   output$teamKey <- renderTable(
     filtered.d() %>% 
