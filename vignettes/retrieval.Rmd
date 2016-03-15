@@ -68,7 +68,7 @@ For other parameters such as "PerMode", the meaning and appropriate values are s
 
 ## Retrieving Player Tracking Data
 
-The process for retrieving player tracking data is more straightforward. There is a single function `getPlayerTrackingData` that takes as parameters the year from which to return data (2014 refers to 2014-15 season) and the type (valid types are "catchShootData", "defenseData", "drivesData", "passingData", "touchesData", "pullUpShootData", "reboundingData", "shootingData", or "speedData"). This function returns a list of data frames if multiple types are requested, and a single data frame if only one type is requested. Refer to http://www.stats.nba.com/ for the meaning of most of these stats.
+The process for retrieving player tracking data is more straightforward. There is a single function `getPlayerTrackingData` that takes as parameters the year from which to return data (2014 refers to 2014-15 season) and the type (valid types are "catchShootData", "defenseData", "drivesData", "passingData", "touchesData", "pullUpShootData", "reboundingData", "shootingData", or "speedData"). This function returns a list of data frames if multiple types are requested, and a single data frame if only one type is requested. Refer to http://stats.nba.com/ for the meaning of most of these stats.
 
 ```{r}
 drives <- rNBA::getPlayerTrackingData(year = 2015, "drivesData")
