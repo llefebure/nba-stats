@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-This package allows the user to build custom shot charts. A shot chart is a scatterplot of the locations from which a player takes shots overlayed onto an outline of the court. They are a very powerful visualization tool to analyze the shooting preferences and efficiency of players. Raw shots data can be retrieved with `getGenericData` through the "shotchartdetail" endpoint.
+This package allows the user to build custom shot charts. A shot chart is a scatterplot of the locations from which a player takes shots overlayed onto an outline of the court. They are a very powerful visualization tool to analyze the shooting preferences and efficiency of players. Raw shots data can be retrieved with `getGenericData` through the "shotchartdetail" endpoint. The package also includes an interactive app for building shot charts (see `launchApp`), although the functionality described here provides the building blocks for more customized charts.
 
 ## Plotting the Court
 
