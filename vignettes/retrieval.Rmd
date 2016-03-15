@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-One of the core functionalities of the rNBA package is data retrieval from http://www.stats.nba.com/. All of the data belongs to the NBA, so please abide by their [Terms of Use](http://www.nba.com/news/termsofuse.html) when using and publishing any work resulting from the use of this package.
+One of the core functionalities of the rNBA package is data retrieval from http://stats.nba.com/. All of the data belongs to the NBA, so please abide by their [Terms of Use](http://www.nba.com/news/termsofuse.html) when using and publishing any work resulting from the use of this package.
 
 This package considers two classes of data sources: generic data and player tracking data. Generic data is a blanket term for most of the data that can be found on http://www.stats.nba.com/. This includes everything from player bio information to historic draft results. Player tracking data refers specifically to advanced player stats that are found under the Player Tracking tab on the webiste.
 
@@ -64,7 +64,7 @@ However, unless you need the full mapping, a more convenient way to search for a
 rNBA::searchIDMappings(player = "kobe")
 ```
 
-For other parameters such as "PerMode", the meaning and appropriate values are sometimes self explanatory. However, often times they are not. See http://github.com/llefebure/nba-stats/wiki/Endpoint-Parameter-Format for a more complete guide on the meaning and format of parameters (and if you're interested, please help us build up that page!).
+For other parameters such as "PerMode", the meaning and appropriate values are sometimes self explanatory. However, often times they are not. See the wiki page on GitHub (user llefebure, repo "nba-stats") for a more complete guide on the meaning and format of parameters (repo may still be private at the time of this reading).
 
 ## Retrieving Player Tracking Data
 
