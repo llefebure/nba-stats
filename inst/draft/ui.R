@@ -12,33 +12,34 @@ colleges <- d %>%
   dplyr::arrange(ORGANIZATION)
 
 shinyUI(fluidPage(
-
-  titlePanel("NBA Draft History"),
-
-  sidebarLayout(
-    sidebarPanel(
-      
-      selectInput("college",
-                  "College:",
-                  choices = colleges[,1],
-                  selected = "Stanford"),
-      
-      dateRangeInput("dateRange",
-                     label = "Date Range",
-                     start = as.Date("1947", format = "%Y"),
-                     end = as.Date("2015", format = "%Y"),
-                     min = as.Date(min(d$SEASON), format = "%Y"), 
-                     max = as.Date(max(d$SEASON), format = "%Y"),
-                     separator = " - ", format = "yyyy",
-                     startview = "year"),
-      
-      downloadButton("downloadPlot", label = "Download Plot"),
-      tableOutput("teamKey")
+  titlePanel("Draft Picks by College"),
+  fluidRow(
+    column(3,
+           selectInput("college",
+                       "College:",
+                       choices = colleges[,1],
+                       selected = "Stanford"),
+           br(),
+           dateRangeInput("dateRange",
+                          label = "Date Range",
+                          start = as.Date("1947", format = "%Y"),
+                          end = as.Date("2015", format = "%Y"),
+                          min = as.Date(min(d$SEASON), format = "%Y"), 
+                          max = as.Date(max(d$SEASON), format = "%Y"),
+                          separator = " - ", format = "yyyy",
+                          startview = "year"),
+           downloadButton("downloadPlot", label = "Download Plot")
     ),
-
-    mainPanel(
-      plotOutput("plot"),
-      tableOutput("playerTable")
+    column(9,
+           plotOutput("plot")
     )
-  )
+  ),
+  hr(),
+  fluidRow(
+    column(4,
+           tableOutput("teamKey")
+    ),
+    column(8,
+           tableOutput("playerTable")
+    ))
 ))
