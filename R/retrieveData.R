@@ -211,9 +211,14 @@ getIDMappings <- function() {
 #' searchIDMappings(player = "curry")
 #' searchIDMappings(player = "curry", team = "golden state")
 searchIDMappings <- function(player = NA, team = NA, active = TRUE) {
-  mapping <- memGetIDMappings()
   if (missing(player) && missing(team)) {
     stop("Must specify either player or team.")
+  }
+  mapping <- memGetIDMappings()
+  if (sum(unlist(lapply(mapping, nrow))) == 0){
+    memoise::forget(memGetIDMappings) # clear cache so that if user connects to internet and tries again,
+                                      # they won't get empty cached result
+    return(NULL)
   }
   rv <- list()
   if (!is.na(player)) {
@@ -240,8 +245,7 @@ searchIDMappings <- function(player = NA, team = NA, active = TRUE) {
 #' @return A data frame or a list of data frames (if the endpoint returns multiple 
 #' datasets) containing the requested data.
 #' @export
-#' @importFrom memoise memoise
-memGetGenericData <- memoise(getGenericData)
+memGetGenericData <- memoise::memoise(getGenericData)
 
 #' Memoised version of getIDMappings
 #' 
@@ -251,4 +255,4 @@ memGetGenericData <- memoise(getGenericData)
 #' is no reason to use this function.
 #' @return A list of length two containing data frames with the mappings.
 #' @export
-memGetIDMappings <- memoise(getIDMappings)
+memGetIDMappings <- memoise::memoise(getIDMappings)
