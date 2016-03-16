@@ -2,8 +2,8 @@ Package: rNBA
 Title: NBA Data
 Version: 0.0.0.9000
 Authors@R: c(person("Luke", "Lefebure", email = "luke.lefebure@gmail.com", role = c("aut", "cre")), person("Vineet", "Ahluwalia", email = "vineetahluwalia1@gmail.com", role = c("aut")))
-Description: This package provides functions for accessing data on stats.nba.com 
-    as well as functionality for plotting and interacting with the data. 
+Description: Users can programmatically access, visualize, and interact with data
+    from stats.nba.com. 
 Depends: 
     R (>= 3.2.3)
 License: GPL (>= 2)
