@@ -2,14 +2,16 @@
 % Please edit documentation in R/shinyApps.R
 \name{launchApp}
 \alias{launchApp}
-\title{Launch a UI based application to view or interaction}
+\title{Launch an interactive user interface}
 \usage{
-launchApp(appName = "rNBAshinyTestApp")
+launchApp(appName = "shotcharts")
 }
 \arguments{
-\item{appName, }{Application Name}
+\item{appName, }{The name of the application that you want to launch. 
+Valid options are: "shotcharts", "draft"}
 }
 \description{
-This function launch a shiny based application for interactive play.
+This function launches a shiny based application for viewing 
+draft history or plotting a shot chart for a player.
 }
 
