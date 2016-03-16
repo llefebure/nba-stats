@@ -6,7 +6,7 @@ test_that("endpoint querying", {
   e3 <- searchEndpoints("player")
   e4 <- searchEndpoints("this should not match")
   
-  expect_identical(e1, e2) # both ways to get all endpoints
+  expect_equal(e1, e2) # both ways to get all endpoints
   expect_match(e3, "player") # results match what they should
   expect_equal(length(e4), 0) # no match
 })
@@ -18,7 +18,7 @@ test_that("endpoint parameter querying", {
 
 test_that("mapping", {
   m <- getIDMappings()
-  expect_identical(names(m), c("player", "team")) # if not connected to internet, this should still pass
-                                                  # because m should still be a named list but with empty
-                                                  # data frame elements
+  expect_equal(names(m), c("player", "team")) # if not connected to internet, this should still pass
+                                              # because m should still be a named list but with empty
+                                              # data frame elements
 })
