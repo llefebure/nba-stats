@@ -1,6 +1,6 @@
 ---
 title: "Summary"
-author: "Vineet Ahluwalia"
+author: "Vineet Ahluwalia & Luke Lefebure"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -11,49 +11,168 @@ vignette: >
 
 The following vignettes summarises the most important functional use of rNBA package:
 
-- Accessing all statistics from [stats.nba.com](http://stats.nba.com/) 
-- Plotting a shotchart
-- Use of shiny apps 
+- [Accessing all statistics from (http://stats.nba.com/)](#Accessing all Statistics) 
+- [Plotting the charts](#Plotting the charts)
+- [Using the Shiny Apps](#Using the Shiny Apps) 
 
-## Vignette Info
+<a id="Accessing all Statistics"></a>
 
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
+# Accessing all Staistics
 
-## Styles
+One of the core functionalities of the rNBA package is data retrieval from http://stats.nba.com/. All of the data belongs to the NBA, so please abide by their [Terms of Use](http://www.nba.com/news/termsofuse.html) when using and publishing any work resulting from the use of this package.
 
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
+This package considers two classes of data sources: generic data and player tracking data. Generic data is a blanket term for most of the data that can be found on http://stats.nba.com/. This includes everything from player bio information to historic draft results. Player tracking data refers specifically to advanced player stats that are found under the Player Tracking tab on the webiste.
 
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
+## Retrieving Generic Data
 
-## Figures
+The function for retrieving a generic data source is `getGenericData`. This function takes two arguments: a data source and a list of parameters for that data source. The available data sources can be explored with the `searchEndpoints` function, and the parameters for a specific data source are found with the `getEndpointParams` function.
 
-The following shows how to create a fullsize court or a half size court. 
+For example, let's say that I am interested in getting some information on Kobe Bryant, so I want to see what sources of player data are available.
 
-```{r, fig.show='hold'}
-library(rNBA)
-courtOutlinePlot(TRUE)
-courtOutlinePlot()
+```{r}
+rNBA::searchEndpoints("player")
 ```
 
-You can enable figure captions by `fig_caption: yes` in YAML:
+There are many sources of player data, but the "playercareerstats" one looks promising. Now I need to see what the required parameters for this source are.
 
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
-
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
-
-## More Examples
-
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
+```{r}
+rNBA::getEndpointParams("playercareerstats")
 ```
 
-Also a quote using `>`:
+There are two parameters for this data source: PerMode and PlayerID. For now, let's just say that I want PerMode to be "PerGame" and that I know that Kobe Bryant's ID is 977 (see below for more information on this). Now I can make a call to `getGenericData` to get this data source.
 
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
+```{r}
+player.career.stats <- rNBA::getGenericData(endpoint = "playercareerstats", 
+                                            params = list(PerMode = "PerGame", PlayerID = 977))
+```
+
+What did `getGenericData` return? In this case, we got a list of 8 data frames. In general, `getGenericData` will return a list of data frames, except when the list would have only one element, in which case just a data frame is returned.
+
+```{r}
+class(player.career.stats)
+lapply(player.career.stats, class)
+```
+
+Finally, let's take a look at one of these data frames. The first, for example, looks like it contains some basic stats (GP for games played, GS for games started, FGM for field goals made, etc.) for the player on a season by season basis.
+
+```{r}
+names(player.career.stats[[1]])
+```
+
+#### Parameter Formatting
+
+Above, the values for the "PerMode" and "PlayerID" parameters seemed to come out of nowhere. First, consider the "PlayerID". This parameter (along with "TeamID") is very common, and it is a unique identifier. The `getIDMappings` function returns a mapping between player and team ID's and player and team names.
+
+```{r}
+m <- rNBA::getIDMappings()
+lapply(m, head)
+```
+
+However, unless you need the full mapping, a more convenient way to search for an ID is with the `searchIDMappings` function. The PlayerID for Kobe Bryant, for example, can be found as shown below.
+
+```{r}
+rNBA::searchIDMappings(player = "kobe")
+```
+
+For other parameters such as "PerMode", the meaning and appropriate values are sometimes self explanatory. However, often times they are not. See the wiki page on GitHub (user llefebure, repo "nba-stats") for a more complete guide on the meaning and format of parameters (repo may still be private at the time of this reading).
+
+## Retrieving Player Tracking Data
+
+The process for retrieving player tracking data is more straightforward. There is a single function `getPlayerTrackingData` that takes as parameters the year from which to return data (2014 refers to 2014-15 season) and the type (valid types are "catchShootData", "defenseData", "drivesData", "passingData", "touchesData", "pullUpShootData", "reboundingData", "shootingData", or "speedData"). This function returns a list of data frames if multiple types are requested, and a single data frame if only one type is requested. Refer to http://stats.nba.com/ for the meaning of most of these stats.
+
+```{r}
+drives <- rNBA::getPlayerTrackingData(year = 2015, "drivesData")
+names(drives)
+```
+
+
+<a id="Plotting the charts"></a>
+
+
+# Plotting the charts
+
+This package allows the user to build custom shot charts. A shot chart is a scatterplot of the locations from which a player takes shots overlayed onto an outline of the court. They are a very powerful visualization tool to analyze the shooting preferences and efficiency of players. Raw shots data can be retrieved with `getGenericData` through the "shotchartdetail" endpoint. The package also includes an interactive app for building shot charts (see `launchApp`), although the functionality described here provides the building blocks for more customized charts.
+
+## Plotting the Court
+
+This package provides two functions for assisting in plotting the lines of an NBA court: `courtOutline` and `courtOutlinePlot`. The first returns a data frame of coordinates of line segments that, when connected, draw the lines of an NBA court. One optional parameter specifies whether to get the coordinates of the full court or only half the court (default is half court).
+
+```{r}
+half.court <- rNBA::courtOutline()
+full.court <- rNBA::courtOutline(full = TRUE)
+head(half.court)
+```
+
+Using base graphics, the lines can be plotted as follows. 
+
+```{r fig.width=5, fig.height=5}
+examplePlotLines <- function(court) {
+  plot(x = NULL, xlim = range(court$x), ylim = range(court$y), xaxt = "n", yaxt = "n", ann = FALSE)
+  for (nm in unique(court$type)) {
+     s <- court$type == nm
+     points(x = court$x[s], y = court$y[s], type = "l", lty = court$ltype[s])
+  } 
+}
+examplePlotLines(half.court)
+examplePlotLines(full.court)
+```
+
+The second function, `courtOutlinePlot`, essentially produces the same plot as above except that it uses ggplot. This function would likely be preferable for almost all applications, as ggplot makes it easy to add layers. Again, one optional parameter specifies whether to plot the full court or only half the court (default is half court).
+
+```{r fig.width=5, fig.height=5}
+p.half <- rNBA::courtOutlinePlot()
+p.full <- rNBA::courtOutlinePlot(full = TRUE)
+p.half
+p.full
+```
+
+## Basic Shot Charts
+
+The above functions can be used as a starting point for building a custom shot chart. Calling `getGenericData` with the "shotchartdetail" endpoint gets raw (x, y) coordinates of shots in the same coordinate axis as the above plots that can then be plotted directly on those plots. However, the package also includes a function `shotChart` that builds a basic complete shot chart for you. This function returns a list with two elements: the plot and the raw data from which the plot was built. With no arguments, this function will produce a default chart for Steph Curry using the stephCurryShots data that is attached to the package.
+
+```{r fig.width=5, fig.height=5}
+sc1 <- rNBA::shotChart()
+sc1$plot
+```
+
+Arguments can be supplied to customize. The params argument takes in a list of parameters in the same format as `getGenericData` for the "shotchartdetail" endpoint. Thus, the paremeters that can be supplied are shown below. However, the user need not specify all of these, because the `shotChart` function will use defaults for any of the non specified parameters.
+
+```{r}
+rNBA::getEndpointParams("shotchartdetail")
+```
+
+`shotChart` also can take a color parameter that defines which attribute to color points by in the shot chart. Valid options for this are any attribute returned by the "shotchartdetail" endpoint, which are those shown below.
+
+```{r}
+names(sc1$data)
+```
+
+A custom shot chart can thus be built as follows.
+
+```{r fig.width=6, fig.height=5}
+rNBA::searchIDMappings(player = "lebron")
+sc2 <- rNBA::shotChart(params = list(PlayerID = 2544), color = "SHOT_ZONE_BASIC")
+sc2$plot
+```
+
+<a id="Using the Shiny Apps"></a>
+
+# Using the Shiny Apps
+
+The following vignette entails the working of the shiny apps included in the package:
+
+* "draft" : This shiny app lets you explore the history of NBA drafts by colleges varying over years. For example: You can
+select "Stanford" and see in a histogram formulation which teams drafted Stanford players. Also, you can download the histogram as a plot.
+
+* "shotcharts" : This shiny app lets you plot and download shot chart of a player with varying attributes including
+missed/not missed shot, in which quarter the shot was made etc. For example: You can choose "Stephen Curry" with outcome as an attribute which would plot the shots made and missed by Stephen Curry over the past twenty games.
+
+## Launching an app
+
+Use launchApp() with the name of the App to start using the interface
+
+```{r, eval = FALSE}
+rNBA::launchApp("draft")
+rNBA::launchApp("shotcharts")
+```
+

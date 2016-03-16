@@ -9,49 +9,19 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-The following 
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
+The following vignette entails the working of the shiny apps included in the package:
 
-## Vignette Info
+* "draft" : This shiny app lets you explore the history of NBA drafts by colleges varying over years. For example: You can
+select "Stanford" and see in a histogram formulation which teams drafted Stanford players. Also, you can download the histogram as a plot.
 
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
+* "shotcharts" : This shiny app lets you plot and download shot chart of a player with varying attributes including
+missed/not missed shot, in which quarter the shot was made etc. For example: You can choose "Stephen Curry" with outcome as an attribute which would plot the shots made and missed by Stephen Curry over the past twenty games.
 
-## Styles
+## Launching an app
 
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
+Use launchApp() with the name of the App to start using the interface
 
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
-
-## Figures
-
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
+```{r, eval = FALSE}
+rNBA::launchApp("draft")
+rNBA::launchApp("shotcharts")
 ```
-
-You can enable figure captions by `fig_caption: yes` in YAML:
-
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
-
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
-
-## More Examples
-
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
-```
-
-Also a quote using `>`:
-
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
