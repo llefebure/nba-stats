@@ -18,16 +18,22 @@ shinyServer(function(input, output) {
     
   # The following makes the plot reactive
   plot <- reactive({
-    # The following decides if the court needs to be full or half
-    full <- ifelse(max(as.numeric(d$values$LOC_Y)) > halfCourtPoint, TRUE, FALSE)
+  
     
     # The following plots the shot chart with the ggplot points
-    p <- rNBA::courtOutlinePlot(full) + ggplot2::geom_point(data = d$values, 
-                                                            ggplot2::aes_string(x = "as.numeric(LOC_X)", 
-                                                                                y = "as.numeric(LOC_Y)", 
-                                                                                color = input$colorattr)) + 
-      ggplot2::theme(legend.title = ggplot2::element_blank())
-  })
+    if (!is.null(d$values)) {
+      # The following decides if the court needs to be full or half
+      full <- ifelse(max(as.numeric(d$values$LOC_Y)) > halfCourtPoint, TRUE, FALSE)
+      
+      p <- rNBA::courtOutlinePlot(full) + ggplot2::geom_point(data = d$values, 
+                                                              ggplot2::aes_string(x = "as.numeric(LOC_X)", 
+                                                                                  y = "as.numeric(LOC_Y)", 
+                                                                                  color = input$colorattr)) + 
+        ggplot2::theme(legend.title = ggplot2::element_blank())
+    } else {
+      p <- rNBA::courtOutlinePlot() + ggplot2::annotate("text", x = 0, y = 100, label = "No data available")
+    }
+      })
   
   # The following takes in the player names
   observeEvent(input$Player, {
@@ -44,7 +50,12 @@ shinyServer(function(input, output) {
     
     # The following uses the memoised version of the getGenericData function
     shotChartData <- rNBA::memGetGenericData("shotchartdetail", default.params) # memoised version
-    d$values <- shotChartData[[1]]
+    if (class(shotChartData) != "list") {
+      d$values <- NULL  
+    } else {
+      d$values <- shotChartData[[1]]  
+    }
+    
   })
   
   # The following renders the plot of the shot chart
