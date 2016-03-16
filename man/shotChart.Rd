@@ -29,6 +29,5 @@ default <- shotChart()
 default$plot
 ####
 andrew.bogut <- shotChart(params = list(PlayerID = 101106))
-andrew.bogut$plot
 }
 

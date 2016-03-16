@@ -182,7 +182,6 @@ courtOutlinePlot <- function(full = FALSE) {
 #' default$plot
 #' ####
 #' andrew.bogut <- shotChart(params = list(PlayerID = 101106))
-#' andrew.bogut$plot
 shotChart <- function(d = NULL, params = NULL, color = "EVENT_TYPE"){
   if (missing(d) && missing(params)) {
     d <- rNBA::stephCurryShots
@@ -199,7 +198,8 @@ shotChart <- function(d = NULL, params = NULL, color = "EVENT_TYPE"){
     }
     d <- memGetGenericData("shotchartdetail", default.params)
     if (is.null(d) || length(d) != 2) {
-      stop("Unable to build shot chart. Data returned by stats.nba.com incorrectly formatted.")
+      cat("Unable to build shot chart. Data returned by stats.nba.com incorrectly formatted.")
+      return(NULL)
     }
     d <- d[[1]]
   }
